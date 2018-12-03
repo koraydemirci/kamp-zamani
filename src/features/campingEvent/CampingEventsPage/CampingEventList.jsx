@@ -3,10 +3,14 @@ import CampingEventListItem from './CampingEventListItem';
 
 class CampingEventList extends Component {
   render() {
+    const { events } = this.props;
     return (
       <div>
-        <CampingEventListItem />
-        <CampingEventListItem />
+        {events &&
+          events.length > 0 &&
+          events.map(event => (
+            <CampingEventListItem key={event.title} event={event} />
+          ))}
       </div>
     );
   }

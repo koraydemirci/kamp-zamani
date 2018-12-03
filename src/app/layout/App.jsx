@@ -48,12 +48,12 @@ class App extends Component {
                         component={CampingSiteForm}
                       />
                       <Route
-                        path="/campingSites"
-                        component={CampingSitesPage}
-                      />
-                      <Route
                         path="/campingSites/:id"
                         component={CampingSitePage}
+                      />
+                      <Route
+                        path="/campingSites"
+                        component={CampingSitesPage}
                       />
                       <Route
                         path="/createCampingEvent"
@@ -64,12 +64,12 @@ class App extends Component {
                         component={CampingEventForm}
                       />
                       <Route
-                        path="/campingEvents"
-                        component={CampingEventsPage}
-                      />
-                      <Route
                         path="/campingEvents/:id"
                         component={CampingEventPage}
+                      />
+                      <Route
+                        path="/campingEvents"
+                        component={CampingEventsPage}
                       />
                       <Route path="/people" component={PeoplePage} />
                       <Route path="/profile/:id" component={UserProfilePage} />

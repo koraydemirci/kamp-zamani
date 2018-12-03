@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { Segment, Item, Icon, List, Button } from 'semantic-ui-react';
+import format from 'date-fns/format';
 
 import CampingEventListAttendee from './CampingEventListAttendee';
 import image from '../../../user.png';
 
 class CampingEventListItem extends Component {
   render() {
+    const { title, hostedBy, date, city, id } = this.props.event;
+
     return (
       <Segment.Group>
         <Segment>
@@ -13,9 +17,9 @@ class CampingEventListItem extends Component {
             <Item>
               <Item.Image size="tiny" circular src={image} />
               <Item.Content>
-                <Item.Header>Elmadağ Kampı</Item.Header>
+                <Item.Header>{title}</Item.Header>
                 <Item.Description>
-                  <a href="#!">Koray Demirci</a> tarafından oluşturuldu
+                  <a href="#!">{hostedBy}</a> tarafından oluşturuldu
                 </Item.Description>
               </Item.Content>
             </Item>
@@ -23,8 +27,8 @@ class CampingEventListItem extends Component {
         </Segment>
         <Segment>
           <span>
-            <Icon name="clock" /> 22 Aralık 2018 - 12:00 |
-            <Icon name="marker" /> Ankara
+            <Icon name="clock" /> {format(date.toDate(), 'dddd Do MMMM')}|
+            <Icon name="marker" /> {city}
           </span>
         </Segment>
         <Segment secondary>
@@ -35,7 +39,13 @@ class CampingEventListItem extends Component {
         <Segment clearing>
           <span>Description</span>
           <Button as="a" color="red" floated="right" content="Delete" />
-          <Button color="teal" floated="right" content="View" />
+          <Button
+            as={Link}
+            to={`/campingEvents/${id}`}
+            color="teal"
+            floated="right"
+            content="View"
+          />
         </Segment>
       </Segment.Group>
     );

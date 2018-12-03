@@ -4,6 +4,8 @@ import { reducer as toastrReducer } from 'react-redux-toastr';
 import { firebaseReducer } from 'react-redux-firebase';
 import { firestoreReducer } from 'redux-firestore';
 
+import eventReducer from '../../features/campingEvent/eventReducer';
+import asyncReducer from '../../features/async/asyncReducer';
 import modalsReducer from '../../features/modals/modalReducer';
 
 const rootReducer = combineReducers({
@@ -11,7 +13,9 @@ const rootReducer = combineReducers({
   firestore: firestoreReducer,
   form: FormReducer,
   toastr: toastrReducer,
-  modals: modalsReducer
+  modals: modalsReducer,
+  events: eventReducer,
+  async: asyncReducer
 });
 
 export default rootReducer;

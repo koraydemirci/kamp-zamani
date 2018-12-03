@@ -1,7 +1,7 @@
-/*global google*/
 import React, { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
-import moment from 'moment';
+import { connect } from 'react-redux';
+// import moment from 'moment';
 import cuid from 'cuid';
 import Script from 'react-load-script';
 import { Segment, Form, Button, Grid, Header } from 'semantic-ui-react';
@@ -11,12 +11,32 @@ import {
   isRequired,
   hasLengthGreaterThan
 } from 'revalidate';
-import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 
+import { createEvent, updateEvent } from '../eventActions';
 import TextInput from '../../../app/common/form/TextInput';
 import TextArea from '../../../app/common/form/TextArea';
 import DateInput from '../../../app/common/form/DateInput';
 import PlaceInput from '../../../app/common/form/PlaceInput';
+import MapContainer from '../../../app/common/map/MapContainer';
+
+const mapState = (state, ownProps) => {
+  const eventId = ownProps.match.params.id;
+
+  let event = {};
+
+  if (eventId && state.events.length > 0) {
+    event = state.events.filter(event => event.id === eventId)[0];
+  }
+
+  return {
+    initialValues: event
+  };
+};
+
+const actions = {
+  createEvent,
+  updateEvent
+};
 
 const validate = combineValidators({
   title: isRequired({ message: 'Lütfen kamp ismi giriniz' }),
@@ -26,14 +46,14 @@ const validate = combineValidators({
       message: 'Açıklama en az 20 harf olmalı'
     })
   )(),
-  city: isRequired({ message: 'Lütfen şehir giriniz' }),
-  location: isRequired({ message: 'Lütfen konum giriniz' })
+  city: isRequired({ message: 'Lütfen şehir ismi giriniz' }),
+  date: isRequired({ message: 'Lütfen tarih giriniz' })
 });
 
 class CampingEventForm extends Component {
   state = {
     cityLatLng: {},
-    venueLatLng: {},
+    markerLocation: {},
     scriptLoaded: false,
     selectedDay: null
   };
@@ -41,31 +61,53 @@ class CampingEventForm extends Component {
   handleScriptLoaded = () => this.setState({ scriptLoaded: true });
 
   handleCitySelect = selectedCity => {
-    geocodeByAddress(selectedCity)
-      .then(results => getLatLng(results[0]))
-      .then(latlng => {
-        this.setState({
-          cityLatLng: latlng
-        });
-      })
-      .then(() => {
-        this.props.change('city', selectedCity);
-      });
+    const lat = selectedCity.geometry.location.lat();
+    const lng = selectedCity.geometry.location.lng();
+    this.setState({
+      cityLatLng: { lat, lng }
+    });
+    this.props.change('city', selectedCity.vicinity);
   };
 
   handleDayClick = day => {
     this.setState({ selectedDay: day });
+    this.props.change('date', day);
+  };
+
+  handleCampLocation = markerLocation => {
+    this.setState({ markerLocation });
+  };
+
+  onFormSubmit = values => {
+    if (Object.keys(this.state.markerLocation) === 0)
+      values.markerLocation = this.state.markerLocation;
+    if (this.props.initialValues.id) {
+      this.props.updateEvent(values);
+      this.props.history.goBack();
+    } else {
+      const newEvent = {
+        ...values,
+        id: cuid(),
+        hostPhotoURL: '/assets/user.png',
+        hostedBy: 'Bob'
+      };
+      this.props.createEvent(newEvent);
+      this.props.history.push('/campingEvents');
+    }
   };
 
   render() {
-    const { invalid, submitting, pristine } = this.props;
-    console.log(this.state.selectedDay);
+    const { history, handleSubmit } = this.props;
+    const { cityLatLng, scriptLoaded, selectedDay } = this.state;
+
     return (
       <Grid>
-        <Script
-          url="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_3h84p1JJpl_a0Th2Y34HpTozfQuzJ18&libraries=places"
-          onLoad={this.handleScriptLoaded}
-        />
+        {!scriptLoaded && (
+          <Script
+            url="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_3h84p1JJpl_a0Th2Y34HpTozfQuzJ18&libraries=places"
+            onLoad={this.handleScriptLoaded}
+          />
+        )}
         <Grid.Column width={10}>
           <Segment>
             <Header
@@ -73,7 +115,7 @@ class CampingEventForm extends Component {
               content="Kampın Detayları"
               style={{ marginBottom: '1rem' }}
             />
-            <Form>
+            <Form onSubmit={handleSubmit(this.onFormSubmit)}>
               <Field
                 name="title"
                 type="text"
@@ -82,43 +124,49 @@ class CampingEventForm extends Component {
               />
               <Field
                 name="description"
-                type="text"
                 component={TextArea}
                 rows={3}
                 placeholder="Kamp Hakkındaki Diğer Bilgiler"
               />
               <Header color="teal" content="Kampın Yeri" />
-
-              {/* <Field
-                name="city"
-                type="text"
-                component={PlaceInput}
-                options={{ types: ['(cities)'] }}
-                placeholder="Event city"
-                onSelect={this.handleCitySelect}
-              /> */}
-
-              <Field
-                name="location"
-                type="text"
-                component={TextInput}
-                placeholder="Konum"
-              />
+              <p>
+                Lütfen GOOGLE tarafından sunulan seçenekler arasından yer seçimi
+                yapınız
+              </p>
+              {scriptLoaded && (
+                <Field
+                  name="city"
+                  type="text"
+                  component={PlaceInput}
+                  options={{
+                    types: ['(cities)'],
+                    componentRestrictions: { country: 'tr' }
+                  }}
+                  placeholder="Şehir"
+                  onSelect={this.handleCitySelect}
+                />
+              )}
+              {scriptLoaded && Object.keys(cityLatLng).length !== 0 && (
+                <MapContainer
+                  cityLatLng={cityLatLng}
+                  onMapSelect={this.handleCampLocation}
+                />
+              )}
               <Header color="teal" content="Kampın Tarihi" />
               <Field
                 name="date"
                 component={DateInput}
-                onDayClick={this.handleDayClick}
-                selectedDay={this.state.selectedDay}
+                onDateClick={this.handleDayClick}
+                selectedDay={selectedDay}
               />
               <Button
-                disabled={invalid || submitting || pristine}
+                // disabled={invalid || submitting || pristine}
                 positive
                 type="submit"
               >
                 Gönder
               </Button>
-              <Button onClick={this.props.history.goBack} type="button">
+              <Button onClick={history.goBack} type="button">
                 İptal
               </Button>
             </Form>
@@ -129,8 +177,11 @@ class CampingEventForm extends Component {
   }
 }
 
-export default reduxForm({
-  form: 'eventForm',
-  enableReinitialize: true,
-  validate
-})(CampingEventForm);
+export default connect(
+  mapState,
+  actions
+)(
+  reduxForm({ form: 'eventForm', enableReinitialize: true, validate })(
+    CampingEventForm
+  )
+);

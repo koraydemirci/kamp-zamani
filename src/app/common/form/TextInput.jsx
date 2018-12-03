@@ -12,7 +12,7 @@ const TextInput = ({
     <Form.Field error={touched && !!error} width={width}>
       <input {...input} placeholder={placeholder} type={type} />
       {touched && error && (
-        <Label basic color="red">
+        <Label basic color="red" style={{ marginTop: 5 }}>
           {error}
         </Label>
       )}

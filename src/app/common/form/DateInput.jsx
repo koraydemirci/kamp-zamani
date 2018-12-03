@@ -29,13 +29,23 @@ const WEEKDAYS_LONG = [
 const WEEKDAYS_SHORT = ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'];
 
 const DateInput = ({
-  input: { value, onChange, onBlur, ...restInput },
-  onDayClick,
+  input,
+  onDateClick,
   selectedDay,
   meta: { touched, error }
 }) => {
-  if (value === '') value = null;
-  console.log(selectedDay);
+  if (input.value === '') input.value = null;
+
+  const modifiers = {
+    selectedDay
+  };
+  const modifiersStyles = {
+    selectedDay: {
+      color: 'white',
+      backgroundColor: '#20a7ac '
+    }
+  };
+
   return (
     <Form.Field error={touched && !!error}>
       {selectedDay ? (
@@ -55,12 +65,15 @@ const DateInput = ({
         <p>Lütfen aşağıdaki takvimden tarih giriniz</p>
       )}
       <DayPicker
-        onDayClick={onDayClick}
+        {...input}
+        onDayClick={onDateClick}
         locale="tr"
         months={MONTHS}
         weekdaysLong={WEEKDAYS_LONG}
         weekdaysShort={WEEKDAYS_SHORT}
         firstDayOfWeek={1}
+        modifiers={modifiers}
+        modifiersStyles={modifiersStyles}
       />
       {touched && error && (
         <Label basic color="red">
