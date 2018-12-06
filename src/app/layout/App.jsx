@@ -13,10 +13,11 @@ import CampingEventForm from '../../features/campingEvent/CampingEventForm/Campi
 import CampingEventPage from '../../features/campingEvent/CampingEventPage/CampingEventPage';
 import CampingEventsPage from '../../features/campingEvent/CampingEventsPage/CampingEventsPage';
 import PeoplePage from '../../features/user/PeoplePage/PeoplePage';
-import Settings from '../../features/user/Settings/Settings';
+import SettingsPage from '../../features/user/SettingsPage/SettingsPage';
 import UserProfilePage from '../../features/user/UserProfilePage/UserProfilePage';
 import ModalManager from '../../features/modals/ModalManager';
 import ScrollToTop from '../common/util/ScrollToTop';
+import 'react-redux-toastr/lib/css/react-redux-toastr.min.css';
 
 class App extends Component {
   render() {
@@ -73,7 +74,7 @@ class App extends Component {
                       />
                       <Route path="/people" component={PeoplePage} />
                       <Route path="/profile/:id" component={UserProfilePage} />
-                      <Route path="/settings" component={Settings} />
+                      <Route path="/settings" component={SettingsPage} />
                     </Switch>
                   </Container>
                 </div>

@@ -31,6 +31,11 @@ export const registerUser = ({ email, password, displayName }) => async (
         createdAt: firestore.FieldValue.serverTimestamp()
       }
     );
+
+    const createdUser = firebase.auth().currentUser;
+    await createdUser.updateProfile({
+      displayName
+    });
     dispatch(closeModal());
   } catch (error) {
     console.log(error);
@@ -48,13 +53,11 @@ export const socialLogin = selectedProvider => async (
   const firebase = getFirebase();
   const firestore = getFirestore();
   try {
-    console.log();
     dispatch(closeModal());
     let user = await firebase.login({
       provider: selectedProvider,
       type: 'popup'
     });
-    console.log(user);
     if (user.additionalUserInfo.isNewUser) {
       await firestore.set(
         { collection: 'users', doc: user.user.uid },

@@ -1,3 +1,15 @@
+html {
+  font-size: 100%;
+}
+
+#root .ui {
+  font-family: 'Roboto', sans-serif !important;
+}
+
+#root .ui .button {
+  font-weight: 400 !important;
+}
+
 body {
   background-color: rgb(234, 234, 234) !important;
 }

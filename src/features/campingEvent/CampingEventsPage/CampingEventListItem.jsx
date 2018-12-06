@@ -1,21 +1,29 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Segment, Item, Icon, List, Button } from 'semantic-ui-react';
-import format from 'date-fns/format';
+import { objectToArray } from '../../../app/common/util/helpers';
 
 import CampingEventListAttendee from './CampingEventListAttendee';
-import image from '../../../user.png';
 
 class CampingEventListItem extends Component {
   render() {
-    const { title, hostedBy, date, city, id } = this.props.event;
+    const {
+      title,
+      hostedBy,
+      date,
+      city,
+      id,
+      description,
+      hostPhotoURL,
+      attendees
+    } = this.props.event;
 
     return (
       <Segment.Group>
         <Segment>
           <Item.Group>
             <Item>
-              <Item.Image size="tiny" circular src={image} />
+              <Item.Image size="tiny" circular src={hostPhotoURL} />
               <Item.Content>
                 <Item.Header>{title}</Item.Header>
                 <Item.Description>
@@ -27,17 +35,29 @@ class CampingEventListItem extends Component {
         </Segment>
         <Segment>
           <span>
-            <Icon name="clock" /> {format(date.toDate(), 'dddd Do MMMM')}|
+            <Icon name="clock" />{' '}
+            {date.toDate().toLocaleDateString('tr', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            })}{' '}
+            |
             <Icon name="marker" /> {city}
           </span>
         </Segment>
         <Segment secondary>
           <List horizontal>
-            <CampingEventListAttendee />
+            {attendees &&
+              objectToArray(attendees).map(attendee => (
+                <CampingEventListAttendee
+                  key={attendee.id}
+                  attendee={attendee}
+                />
+              ))}
           </List>
         </Segment>
         <Segment clearing>
-          <span>Description</span>
+          <span>{description}</span>
           <Button as="a" color="red" floated="right" content="Delete" />
           <Button
             as={Link}

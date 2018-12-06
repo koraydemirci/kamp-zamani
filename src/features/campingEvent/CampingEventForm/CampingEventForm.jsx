@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 import { connect } from 'react-redux';
-// import moment from 'moment';
-import cuid from 'cuid';
 import Script from 'react-load-script';
 import { Segment, Form, Button, Grid, Header } from 'semantic-ui-react';
 import {
@@ -79,19 +77,11 @@ class CampingEventForm extends Component {
   };
 
   onFormSubmit = values => {
-    if (Object.keys(this.state.markerLocation) === 0)
-      values.markerLocation = this.state.markerLocation;
     if (this.props.initialValues.id) {
       this.props.updateEvent(values);
       this.props.history.goBack();
     } else {
-      const newEvent = {
-        ...values,
-        id: cuid(),
-        hostPhotoURL: '/assets/user.png',
-        hostedBy: 'Bob'
-      };
-      this.props.createEvent(newEvent);
+      this.props.createEvent(values);
       this.props.history.push('/campingEvents');
     }
   };
