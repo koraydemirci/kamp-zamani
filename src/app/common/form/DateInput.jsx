@@ -34,8 +34,6 @@ const DateInput = ({
   selectedDay,
   meta: { touched, error }
 }) => {
-  if (input.value === '') input.value = null;
-
   const modifiers = {
     selectedDay
   };

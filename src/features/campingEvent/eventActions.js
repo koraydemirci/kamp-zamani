@@ -1,7 +1,7 @@
 import { toastr } from 'react-redux-toastr';
 
 import { createNewEvent } from '../../app/common/util/helpers';
-import { DELETE_EVENT, UPDATE_EVENT, FETCH_EVENTS } from './eventConstants';
+import { DELETE_EVENT, FETCH_EVENTS } from './eventConstants';
 
 export const fetchEvents = events => {
   return {
@@ -15,7 +15,6 @@ export const createEvent = event => {
     const firebase = getFirebase();
     const firestore = getFirestore();
     const user = firebase.auth().currentUser;
-    console.log(user);
     const photoURL = getState().firebase.profile.photoURL;
     let newEvent = createNewEvent(user, photoURL, event);
     try {
@@ -24,7 +23,9 @@ export const createEvent = event => {
         eventId: createdEvent.id,
         userUid: user.uid,
         eventDate: event.date,
-        host: true
+        host: true,
+        displayName: user.displayName,
+        photoURL
       });
       toastr.success('Başarılı', 'Kamp tarihi oluşturuldu');
     } catch (error) {
@@ -32,18 +33,17 @@ export const createEvent = event => {
     }
   };
 };
+
 export const updateEvent = event => {
-  return async dispatch => {
+  return async (dispatch, getState, { getFirestore }) => {
+    const firestore = getFirestore();
+
     try {
-      dispatch({
-        type: UPDATE_EVENT,
-        payload: {
-          event
-        }
-      });
-      toastr.success('Success', 'Event has been updated');
+      await firestore.update(`events/${event.id}`, event);
+      toastr.success('Başarılı', 'Etkinlik güncellendi');
     } catch (error) {
-      toastr.error('Oops', 'Something went wrong');
+      console.log(error);
+      toastr.error('Hata!', 'Etkinlik güncellenemedi');
     }
   };
 };
@@ -57,16 +57,22 @@ export const deleteEvent = eventId => {
   };
 };
 
-// export const loadEvents = () => {
-//   return async dispatch => {
-//     try {
-//       dispatch(asyncActionStart());
-//       let events = await fetchSampleData();
-//       dispatch(fetchEvents(events));
-//       dispatch(asyncActionFinish());
-//     } catch (error) {
-//       console.log(error);
-//       dispatch(asyncActionError());
-//     }
-//   };
-// };
+export const cancelToggle = (cancelled, eventId) => async (
+  dispatch,
+  getState,
+  { getFirestore }
+) => {
+  const firestore = getFirestore();
+  const message = cancelled
+    ? 'Etkinlik aktive edildi'
+    : 'Etkinlik iptal edildi';
+  try {
+    firestore.update(`events/${eventId}`, {
+      cancelled: cancelled
+    });
+    toastr.success('Başarılı', message);
+  } catch (error) {
+    console.log(error);
+    toastr.error('Hata!', 'Etkinlik güncellenemedi');
+  }
+};

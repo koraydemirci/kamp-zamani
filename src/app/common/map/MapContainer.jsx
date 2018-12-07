@@ -21,10 +21,11 @@ class InnerMap extends React.Component {
   };
 
   render() {
-    const {
-      cityLatLng: { lat, lng }
-    } = this.props;
-
+    let lat, lng;
+    if (this.props.cityLatLng) {
+      lat = this.props.cityLatLng.lat;
+      lng = this.props.cityLatLng.lng;
+    }
     return (
       <GoogleMap
         defaultZoom={12}
@@ -45,7 +46,6 @@ class MapContainer extends React.Component {
   render() {
     return (
       <div style={{ height: '100%' }}>
-        <p>Lütfen kamp yapılacak yeri harita üzerinde seçiniz</p>
         <Map
           cityLatLng={this.props.cityLatLng}
           googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_3h84p1JJpl_a0Th2Y34HpTozfQuzJ18&libraries=places"
@@ -60,17 +60,3 @@ class MapContainer extends React.Component {
 }
 
 export default MapContainer;
-
-// componentDidMount() {
-//   this.setState({ location: this.props.location });
-// }
-
-// static getDerivedStateFromProps(nextProps, prevState) {
-//   if (nextProps.location !== prevState.location) {
-//     return {
-//       location: nextProps.location
-//     };
-//   }
-
-//   return prevState;
-// }

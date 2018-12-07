@@ -42,9 +42,15 @@ class NavBar extends Component {
             <img src="/assets/logo.png" alt="logo" />
             KAMP ZAMANI
           </Menu.Item>
-          <Menu.Item as={NavLink} to="/campingSites" content="Kamp Yerleri" />
           <Menu.Item
             as={NavLink}
+            exact
+            to="/campingSites"
+            content="Kamp Yerleri"
+          />
+          <Menu.Item
+            as={NavLink}
+            exact
             to="/campingEvents"
             content="Kamp Tarihleri"
           />

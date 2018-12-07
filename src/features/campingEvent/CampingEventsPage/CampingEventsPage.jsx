@@ -9,18 +9,19 @@ import CampingEventActivity from './CampingEventActivity';
 
 const mapState = state => ({
   events: state.firestore.ordered.events,
+  attendees: state.firestore.ordered.event_attendee,
   loading: state.async.loading
 });
 
 class CampingEventsPage extends Component {
   render() {
-    const { events, loading } = this.props;
+    const { events, loading, attendees } = this.props;
     if (loading) return <LoadingComponent inverted={true} />;
 
     return (
       <Grid>
         <Grid.Column width={10}>
-          <CampingEventList events={events} />
+          <CampingEventList events={events} attendees={attendees} />
         </Grid.Column>
         <Grid.Column width={6}>
           <CampingEventActivity />
@@ -31,5 +32,5 @@ class CampingEventsPage extends Component {
 }
 
 export default connect(mapState)(
-  firestoreConnect([{ collection: 'events' }])(CampingEventsPage)
+  firestoreConnect(['events', 'event_attendee'])(CampingEventsPage)
 );

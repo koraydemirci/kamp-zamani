@@ -102,9 +102,66 @@ export const setMainPhoto = photo => async (
     await firebase.updateProfile({
       photoURL: photo.url
     });
-    toastr.success('Başarılı!', 'Profil resmi değiştirildi');
+    toastr.success('Başarılı!', 'Profil resminiz değiştirildi');
   } catch (error) {
     console.log(error);
     toastr.error('Hata', 'Profil resmi değiştirilemedi');
+  }
+};
+
+export const goingToEvent = event => async (
+  dispatch,
+  getState,
+  { getFirebase, getFirestore }
+) => {
+  const firebase = getFirebase();
+  const firestore = getFirestore();
+  const user = firebase.auth().currentUser;
+  const photoURL = getState().firebase.profile.photoURL;
+  const attendee = {
+    going: true,
+    joinDate: Date.now(),
+    photoURL: photoURL || '/assets/user.png',
+    displayName: user.displayName,
+    host: false
+  };
+  try {
+    console.log(`events/${event.id}`);
+    await firestore.update(`events/${event.id}`, {
+      [`attendees.${user.uid}`]: attendee
+    });
+
+    await firestore.set(`event_attendee/${event.id}_${user.uid}`, {
+      eventId: event.id,
+      userUid: user.uid,
+      eventDate: event.date,
+      photoURL,
+      displayName: user.displayName,
+      host: false
+    });
+    toastr.success('Başarılı', 'Etkinliğe katıldınız');
+  } catch (error) {
+    console.log(error);
+    toastr.error('Hata!', 'Etkinliğe katılamadınız');
+  }
+};
+
+export const cancelGoingToEvent = event => async (
+  dispatch,
+  getState,
+  { getFirebase, getFirestore }
+) => {
+  const firebase = getFirebase();
+  const firestore = getFirestore();
+  const user = firebase.auth().currentUser;
+  try {
+    await firestore.delete(`event_attendee/${event.id}_${user.uid}`);
+    await firestore.update(`events/${event.id}`, {
+      [`attendees.${user.uid}`]: firestore.FieldValue.delete()
+    });
+    toastr.success('Başarılı', 'Etkinlikten ayrıldınız ');
+  } catch (error) {
+    console.log(error);
+    toastr.error('Hata', 'Etkinlikten ayrılamadınız');
   }
 };

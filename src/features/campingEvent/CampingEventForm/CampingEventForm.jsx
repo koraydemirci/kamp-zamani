@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 import { connect } from 'react-redux';
+import { withFirestore } from 'react-redux-firebase';
 import Script from 'react-load-script';
 import { Segment, Form, Button, Grid, Header } from 'semantic-ui-react';
 import {
@@ -10,7 +11,7 @@ import {
   hasLengthGreaterThan
 } from 'revalidate';
 
-import { createEvent, updateEvent } from '../eventActions';
+import { createEvent, updateEvent, cancelToggle } from '../eventActions';
 import TextInput from '../../../app/common/form/TextInput';
 import TextArea from '../../../app/common/form/TextArea';
 import DateInput from '../../../app/common/form/DateInput';
@@ -19,21 +20,23 @@ import MapContainer from '../../../app/common/map/MapContainer';
 
 const mapState = (state, ownProps) => {
   const eventId = ownProps.match.params.id;
-
-  let event = {};
-
-  if (eventId && state.events.length > 0) {
-    event = state.events.filter(event => event.id === eventId)[0];
+  let selectedEvent = {};
+  if (state.firestore.ordered.events) {
+    selectedEvent = state.firestore.ordered.events.filter(
+      event => event.id === eventId
+    )[0];
   }
 
   return {
-    initialValues: event
+    initialValues: selectedEvent,
+    event: selectedEvent
   };
 };
 
 const actions = {
   createEvent,
-  updateEvent
+  updateEvent,
+  cancelToggle
 };
 
 const validate = combineValidators({
@@ -56,6 +59,16 @@ class CampingEventForm extends Component {
     selectedDay: null
   };
 
+  async componentDidMount() {
+    const { firestore, match } = this.props;
+    await firestore.setListener(`events/${match.params.id}`);
+  }
+
+  async componentWillUnmount() {
+    const { firestore, match } = this.props;
+    await firestore.unsetListener(`events/${match.params.id}`);
+  }
+
   handleScriptLoaded = () => this.setState({ scriptLoaded: true });
 
   handleCitySelect = selectedCity => {
@@ -77,7 +90,10 @@ class CampingEventForm extends Component {
   };
 
   onFormSubmit = values => {
-    if (this.props.initialValues.id) {
+    if (Object.keys(this.state.markerLocation).length !== 0)
+      values.markerLocation = this.state.markerLocation;
+
+    if (this.props.initialValues && this.props.initialValues.id) {
       this.props.updateEvent(values);
       this.props.history.goBack();
     } else {
@@ -87,7 +103,7 @@ class CampingEventForm extends Component {
   };
 
   render() {
-    const { history, handleSubmit } = this.props;
+    const { history, handleSubmit, event, cancelToggle } = this.props;
     const { cityLatLng, scriptLoaded, selectedDay } = this.state;
 
     return (
@@ -115,11 +131,11 @@ class CampingEventForm extends Component {
               <Field
                 name="description"
                 component={TextArea}
-                rows={3}
+                rows={6}
                 placeholder="Kamp Hakkındaki Diğer Bilgiler"
               />
               <Header color="teal" content="Kampın Yeri" />
-              <p>
+              <p style={{ color: 'red' }}>
                 Lütfen GOOGLE tarafından sunulan seçenekler arasından yer seçimi
                 yapınız
               </p>
@@ -137,10 +153,13 @@ class CampingEventForm extends Component {
                 />
               )}
               {scriptLoaded && Object.keys(cityLatLng).length !== 0 && (
-                <MapContainer
-                  cityLatLng={cityLatLng}
-                  onMapSelect={this.handleCampLocation}
-                />
+                <div>
+                  <p>Lütfen kamp yapılacak yeri harita üzerinde seçiniz</p>
+                  <MapContainer
+                    cityLatLng={cityLatLng}
+                    onMapSelect={this.handleCampLocation}
+                  />
+                </div>
               )}
               <Header color="teal" content="Kampın Tarihi" />
               <Field
@@ -159,6 +178,19 @@ class CampingEventForm extends Component {
               <Button onClick={history.goBack} type="button">
                 İptal
               </Button>
+              {event && (
+                <Button
+                  onClick={() => cancelToggle(!event.cancelled, event.id)}
+                  type="button"
+                  color={event.cancelled ? 'green' : 'red'}
+                  floated="right"
+                  content={
+                    event.cancelled
+                      ? 'Etkinliği Aktif Yap'
+                      : 'Etkinliği İptal Et'
+                  }
+                />
+              )}
             </Form>
           </Segment>
         </Grid.Column>
@@ -167,11 +199,13 @@ class CampingEventForm extends Component {
   }
 }
 
-export default connect(
-  mapState,
-  actions
-)(
-  reduxForm({ form: 'eventForm', enableReinitialize: true, validate })(
-    CampingEventForm
+export default withFirestore(
+  connect(
+    mapState,
+    actions
+  )(
+    reduxForm({ form: 'eventForm', enableReinitialize: true, validate })(
+      CampingEventForm
+    )
   )
 );

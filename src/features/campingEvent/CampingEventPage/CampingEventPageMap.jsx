@@ -1,7 +1,7 @@
 import React from 'react';
 import { Segment } from 'semantic-ui-react';
 
-const CampingEventpageMap = () => {
+const CampingEventPageMap = () => {
   return (
     <Segment attached="bottom" style={{ padding: 0 }}>
       <div style={{ height: '300px', width: '100%' }}>
@@ -11,4 +11,4 @@ const CampingEventpageMap = () => {
   );
 };
 
-export default CampingEventpageMap;
+export default CampingEventPageMap;

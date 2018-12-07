@@ -1,36 +1,35 @@
 import React, { Component } from 'react';
-import { Segment, Grid, Icon, Button } from 'semantic-ui-react';
-import CampingEventPageMap from './CampingEventPageMap';
-import format from 'date-fns/format';
+import { Segment, Grid, Icon } from 'semantic-ui-react';
+import Script from 'react-load-script';
+import MapContainer from '../../../app/common/map/MapContainer';
 
 class CampingEventPageInfo extends Component {
   state = {
-    showMap: false
+    scriptLoaded: false
   };
 
-  componentWillUnmount() {
-    this.setState({
-      showMap: false
-    });
-  }
-
-  showMapToggle = () => {
-    this.setState(prevState => ({
-      showMap: !prevState.showMap
-    }));
-  };
+  handleScriptLoaded = () => this.setState({ scriptLoaded: true });
 
   render() {
-    const { event } = this.props;
+    const {
+      event: { description, date, city, markerLocation }
+    } = this.props;
+
     return (
       <Segment.Group>
+        {!this.state.scriptLoaded && (
+          <Script
+            url="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_3h84p1JJpl_a0Th2Y34HpTozfQuzJ18&libraries=places"
+            onLoad={this.handleScriptLoaded}
+          />
+        )}
         <Segment attached="top">
           <Grid>
             <Grid.Column width={1}>
               <Icon size="large" color="teal" name="info" />
             </Grid.Column>
             <Grid.Column width={15}>
-              <p>{event.description}</p>
+              <p>{description}</p>
             </Grid.Column>
           </Grid>
         </Segment>
@@ -41,8 +40,13 @@ class CampingEventPageInfo extends Component {
             </Grid.Column>
             <Grid.Column width={15}>
               <span>
-                {format(event.date, 'dddd Do MMM')} at{' '}
-                {format(event.date, 'h:mm A')}
+                {' '}
+                {date &&
+                  date.toDate().toLocaleDateString('tr', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
               </span>
             </Grid.Column>
           </Grid>
@@ -53,24 +57,11 @@ class CampingEventPageInfo extends Component {
               <Icon name="marker" size="large" color="teal" />
             </Grid.Column>
             <Grid.Column width={11}>
-              <span>{event.venue}</span>
-            </Grid.Column>
-            <Grid.Column width={4}>
-              <Button
-                onClick={this.showMapToggle}
-                color="teal"
-                size="tiny"
-                content={this.state.showMap ? 'Hide Map' : 'Show Map'}
-              />
+              <span>{city}</span>
             </Grid.Column>
           </Grid>
         </Segment>
-        {this.state.showMap && (
-          <CampingEventPageMap
-            lat={event.venueLatLng.lat}
-            lng={event.venueLatLng.lng}
-          />
-        )}
+        {false && <MapContainer cityLatLng={markerLocation} />}
       </Segment.Group>
     );
   }
