@@ -3,7 +3,6 @@ import { Segment, List, Label, Item, Image } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
 const CampingEventPageSidebar = ({ attendees }) => {
-  console.log(attendees);
   return (
     <div>
       <Segment
@@ -33,7 +32,7 @@ const CampingEventPageSidebar = ({ attendees }) => {
                 <Image circular size="mini" src={attendee.photoURL} />
                 <Item.Content verticalAlign="middle" style={{ marginTop: 5 }}>
                   <Item.Header as="h5">
-                    <Link to={`/profile/${attendee.id}`}>
+                    <Link to={`/profile/${attendee.userUid}`}>
                       {attendee.displayName}
                     </Link>
                   </Item.Header>

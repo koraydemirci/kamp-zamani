@@ -9,7 +9,7 @@ class CampingEventListAttendee extends Component {
       <List.Item>
         <Image
           as={Link}
-          to={`/profile/${attendee.id}`}
+          to={`/profile/${attendee.userUid}`}
           size="mini"
           circular
           src={attendee.photoURL}

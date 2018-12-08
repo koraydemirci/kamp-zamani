@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Segment, Item, List, Button, Label } from 'semantic-ui-react';
-import { objectToArray } from '../../../app/common/util/helpers';
 
 import CampingEventListAttendee from './CampingEventListAttendee';
 
@@ -21,7 +20,7 @@ class CampingEventListItem extends Component {
       },
       attendees
     } = this.props;
-    console.log(attendees);
+
     return (
       <Segment.Group>
         <Segment>
@@ -29,7 +28,9 @@ class CampingEventListItem extends Component {
             <Item>
               <Item.Image size="tiny" circular src={hostPhotoURL} />
               <Item.Content>
-                <Item.Header>{title}</Item.Header>
+                <Item.Header as={Link} to={`/campingEvents/${id}`}>
+                  {title}
+                </Item.Header>
                 <Item.Description>
                   <Link to={`/profile/${hostUid}`}>{hostedBy}</Link> tarafından
                   oluşturuldu
@@ -73,15 +74,16 @@ class CampingEventListItem extends Component {
                 ))}
           </List>
         </Segment>
-        <Segment clearing>
+        <Segment>
           <span>{description}</span>
-          <Button as="a" color="red" floated="right" content="Delete" />
+        </Segment>
+        <Segment secondary clearing>
           <Button
             as={Link}
             to={`/campingEvents/${id}`}
             color="teal"
-            floated="right"
-            content="View"
+            floated="left"
+            content="AYRINTILAR"
           />
         </Segment>
       </Segment.Group>

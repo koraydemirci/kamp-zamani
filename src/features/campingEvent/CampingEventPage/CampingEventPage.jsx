@@ -7,7 +7,6 @@ import CampingEventPageHeader from './CampingEventPageHeader';
 import CampingEventPageInfo from './CampingEventPageInfo';
 import CampingEventPageChat from './CampingEventPageChat';
 import CampingEventPageSidebar from './CampingEventPageSidebar';
-import { objectToArray } from '../../../app/common/util/helpers';
 import { goingToEvent, cancelGoingToEvent } from '../../user/UserActions';
 
 const mapState = (state, ownProps) => {
@@ -41,14 +40,18 @@ const actions = {
 class CampingEventPage extends Component {
   async componentDidMount() {
     const { firestore, match } = this.props;
-    await firestore.setListener(`events/${match.params.id}`);
-    await firestore.setListener(`event_attendee`);
+    firestore.setListeners([
+      { collection: 'events', doc: match.params.id },
+      { collection: 'event_attendee' }
+    ]);
   }
 
   async componentWillUnmount() {
     const { firestore, match } = this.props;
-    await firestore.unsetListener(`events/${match.params.id}`);
-    await firestore.unsetListener(`event_attendee`);
+    firestore.unsetListeners([
+      { collection: 'events', doc: match.params.id },
+      { collection: 'event_attendee' }
+    ]);
   }
   render() {
     const {
@@ -58,9 +61,6 @@ class CampingEventPage extends Component {
       cancelGoingToEvent,
       attendees
     } = this.props;
-    // const attendees =
-    //   event && event.attendees && objectToArray(event.attendees);
-    console.log(attendees);
     const isHost = event && event.hostUid === auth.uid;
     const isGoing =
       attendees && attendees.some(attendee => attendee.userUid === auth.uid);
