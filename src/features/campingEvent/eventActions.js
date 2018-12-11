@@ -54,8 +54,8 @@ export const cancelToggle = (cancelled, eventId) => async (
 ) => {
   const firestore = getFirestore();
   const message = cancelled
-    ? 'Etkinlik aktive edildi'
-    : 'Etkinlik iptal edildi';
+    ? 'Etkinlik iptal edildi'
+    : 'Etkinlik aktive edildi';
   try {
     firestore.update(`events/${eventId}`, {
       cancelled: cancelled
@@ -87,12 +87,12 @@ export const getEventsForDashboard = lastEvent => async (
     lastEvent
       ? (query = eventsRef
           .where('date', '>=', today)
-          .orderBy('date')
+          .orderBy('date', 'desc')
           .startAfter(startAfter)
           .limit(2))
       : (query = eventsRef
           .where('date', '>=', today)
-          .orderBy('date')
+          .orderBy('date', 'desc')
           .limit(2));
 
     let querySnap = await query.get();
@@ -114,5 +114,30 @@ export const getEventsForDashboard = lastEvent => async (
   } catch (error) {
     console.log(error);
     dispatch(asyncActionError());
+  }
+};
+
+export const addEventComment = (eventId, values, parentId) => async (
+  dispatch,
+  getState,
+  { getFirebase }
+) => {
+  const firebase = getFirebase();
+  const profile = getState().firebase.profile;
+  const user = firebase.auth().currentUser;
+  let newComment = {
+    parentId,
+    displayName: profile.displayName,
+    photoURL: profile.photoURL || '/assets/user.png',
+    uid: user.uid,
+    text: values.comment,
+    date: Date.now()
+  };
+  try {
+    await firebase.push(`event_chat/${eventId}`, newComment);
+    toastr.success('Başarılı', 'Yorum eklendi');
+  } catch (error) {
+    console.log(error);
+    toastr.error('Hata!', 'Yorum eklenemdi');
   }
 };

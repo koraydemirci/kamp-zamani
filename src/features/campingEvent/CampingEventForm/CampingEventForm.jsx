@@ -80,7 +80,10 @@ class CampingEventForm extends Component {
     this.props.change('city', selectedCity.vicinity);
   };
 
-  handleDayClick = day => {
+  handleDayClick = (day, modifiers = {}) => {
+    if (modifiers.disabled) {
+      return;
+    }
     this.setState({ selectedDay: day });
     this.props.change('date', day);
   };

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Segment, Item, List, Button, Label } from 'semantic-ui-react';
 
 import CampingEventListAttendee from './CampingEventListAttendee';
+import { objectToArray } from '../../../app/common/util/helpers';
 
 class CampingEventListItem extends Component {
   render() {
@@ -10,15 +11,16 @@ class CampingEventListItem extends Component {
       event: {
         title,
         hostedBy,
+        created,
         date,
         city,
         id,
         hostUid,
         description,
         hostPhotoURL,
-        cancelled
-      },
-      attendees
+        cancelled,
+        attendees
+      }
     } = this.props;
 
     return (
@@ -32,8 +34,13 @@ class CampingEventListItem extends Component {
                   {title}
                 </Item.Header>
                 <Item.Description>
-                  <Link to={`/profile/${hostUid}`}>{hostedBy}</Link> tarafından
-                  oluşturuldu
+                  <Link to={`/profile/${hostUid}`}>{hostedBy}</Link> tarafından{' '}
+                  {new Date(created).toLocaleDateString('tr', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}{' '}
+                  tarihinde oluşturuldu
                 </Item.Description>
                 {cancelled && (
                   <Label
@@ -64,14 +71,12 @@ class CampingEventListItem extends Component {
         <Segment secondary>
           <List horizontal>
             {attendees &&
-              attendees
-                .filter(attendee => attendee.eventId === id)
-                .map(attendee => (
-                  <CampingEventListAttendee
-                    key={attendee.id}
-                    attendee={attendee}
-                  />
-                ))}
+              objectToArray(attendees).map(attendee => (
+                <CampingEventListAttendee
+                  key={attendee.id}
+                  attendee={attendee}
+                />
+              ))}
           </List>
         </Segment>
         <Segment>

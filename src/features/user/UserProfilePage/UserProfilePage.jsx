@@ -10,7 +10,7 @@ import UserProfileSidebar from './UserProfileSidebar';
 import UserProfilePhotos from './UserProfilePhotos';
 import UserProfileEvents from './UserProfileEvents';
 import { userDetailedQuery } from '../userQueries';
-import { getUserEvents } from '../UserActions';
+import { getUserEvents, followUser, unfollowUser } from '../UserActions';
 import LoadingComponent from '../../../app/layout/LoadingComponent';
 
 const mapState = (state, ownProps) => {
@@ -32,12 +32,15 @@ const mapState = (state, ownProps) => {
     eventsLoading: state.async.loading,
     auth: state.firebase.auth,
     photos: state.firestore.ordered.photos,
-    requesting: state.firestore.status.requesting
+    requesting: state.firestore.status.requesting,
+    following: state.firestore.ordered.following
   };
 };
 
 const actions = {
-  getUserEvents
+  getUserEvents,
+  followUser,
+  unfollowUser
 };
 
 class UserProfilePage extends Component {
@@ -57,10 +60,14 @@ class UserProfilePage extends Component {
       match,
       requesting,
       events,
-      eventsLoading
+      eventsLoading,
+      followUser,
+      following,
+      unfollowUser
     } = this.props;
     const isCurrentUser = auth.uid === match.params.id;
     const loading = Object.values(requesting).some(a => a === true);
+    const isFollowing = !isEmpty(following);
 
     return loading ? (
       <LoadingComponent inverted={true} />
@@ -68,7 +75,13 @@ class UserProfilePage extends Component {
       <Grid>
         <UserProfileHeader Header profile={profile} />
         <UserProfileDescription profile={profile} />
-        <UserProfileSidebar isCurrentUser={isCurrentUser} />
+        <UserProfileSidebar
+          isFollowing={isFollowing}
+          profile={profile}
+          followUser={followUser}
+          unfollowUser={unfollowUser}
+          isCurrentUser={isCurrentUser}
+        />
         {photos && photos.length > 0 && <UserProfilePhotos photos={photos} />}
         <UserProfileEvents
           changeTab={this.changeTab}
@@ -85,5 +98,7 @@ export default compose(
     mapState,
     actions
   ),
-  firestoreConnect(userUid => userDetailedQuery(userUid))
+  firestoreConnect((auth, userUid, match) =>
+    userDetailedQuery(auth, userUid, match)
+  )
 )(UserProfilePage);

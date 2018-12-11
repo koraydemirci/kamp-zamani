@@ -72,6 +72,11 @@ const DateInput = ({
         firstDayOfWeek={1}
         modifiers={modifiers}
         modifiersStyles={modifiersStyles}
+        disabledDays={[
+          {
+            before: new Date()
+          }
+        ]}
       />
       {touched && error && (
         <Label basic color="red">

@@ -8,10 +8,18 @@ import CampingEventList from './CampingEventList';
 import CampingEventActivity from './CampingEventActivity';
 import { getEventsForDashboard } from '../eventActions';
 
+const query = [
+  {
+    collection: 'activity',
+    orderBy: ['timestamp', 'desc'],
+    limit: 5
+  }
+];
+
 const mapState = state => ({
   events: state.events,
   loading: state.async.loading,
-  attendees: state.firestore.ordered.event_attendee
+  activities: state.firestore.ordered.activity
 });
 
 const actions = {
@@ -22,12 +30,12 @@ class CampingEventsPage extends Component {
   state = {
     moreEvents: false,
     loadingInitial: true,
-    loadedEvents: []
+    loadedEvents: [],
+    contextRef: {}
   };
 
   async componentDidMount() {
     let next = await this.props.getEventsForDashboard();
-
     if (next && next.docs && next.docs.length > 1) {
       this.setState({
         moreEvents: true,
@@ -47,9 +55,9 @@ class CampingEventsPage extends Component {
   getNextEvents = async () => {
     const { events } = this.props;
     let lastEvent = events && events[events.length - 1];
-    console.log(lastEvent);
+
     let next = await this.props.getEventsForDashboard(lastEvent);
-    console.log(next);
+
     if (next && next.docs && next.docs.length <= 1) {
       this.setState({
         moreEvents: false
@@ -57,24 +65,30 @@ class CampingEventsPage extends Component {
     }
   };
 
+  handleContextRef = contextRef => this.setState({ contextRef });
+
   render() {
-    const { attendees, loading } = this.props;
+    const { loading, activities } = this.props;
     const { moreEvents, loadedEvents } = this.state;
     if (this.state.loadingInitial) return <LoadingComponent inverted={true} />;
 
     return (
       <Grid>
         <Grid.Column width={10}>
-          <CampingEventList
-            loading={loading}
-            attendees={attendees}
-            moreEvents={moreEvents}
-            events={loadedEvents}
-            getNextEvents={this.getNextEvents}
-          />
+          <div ref={this.handleContextRef}>
+            <CampingEventList
+              loading={loading}
+              moreEvents={moreEvents}
+              events={loadedEvents}
+              getNextEvents={this.getNextEvents}
+            />
+          </div>
         </Grid.Column>
         <Grid.Column width={6}>
-          <CampingEventActivity />
+          <CampingEventActivity
+            activities={activities}
+            contextRef={this.state.contextRef}
+          />
         </Grid.Column>
         <Grid.Column width={10}>
           <Loader active={loading} style={{ marginBottom: 20 }} />
@@ -87,4 +101,4 @@ class CampingEventsPage extends Component {
 export default connect(
   mapState,
   actions
-)(firestoreConnect(['events', 'event_attendee'])(CampingEventsPage));
+)(firestoreConnect(query)(CampingEventsPage));
