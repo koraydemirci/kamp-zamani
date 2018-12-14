@@ -70,6 +70,7 @@ class CampingEventsPage extends Component {
   render() {
     const { loading, activities } = this.props;
     const { moreEvents, loadedEvents } = this.state;
+
     if (this.state.loadingInitial) return <LoadingComponent inverted={true} />;
 
     return (

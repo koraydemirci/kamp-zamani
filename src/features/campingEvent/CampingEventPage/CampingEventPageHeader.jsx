@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, Image, Item, Header, Button } from 'semantic-ui-react';
+import { Segment, Image, Item, Header, Button, Label } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
 const eventImageStyle = {
@@ -18,10 +18,13 @@ const eventImageTextStyle = {
 const CampingEventPageHeader = ({
   event,
   event: { date, title, hostedBy, id },
+  loading,
   isHost,
   isGoing,
   goingToEvent,
-  cancelGoingToEvent
+  cancelGoingToEvent,
+  authenticated,
+  openModal
 }) => {
   return (
     <Segment.Group>
@@ -60,18 +63,33 @@ const CampingEventPageHeader = ({
       <Segment attached="bottom">
         {!isHost && (
           <div>
-            {isGoing ? (
+            {isGoing && !event.cancelled && (
               <Button onClick={() => cancelGoingToEvent(event)}>
                 Katılımı İptal Et
               </Button>
-            ) : (
+            )}
+            {!isGoing && authenticated && !event.cancelled && (
               <Button
+                loading={loading}
                 onClick={() => goingToEvent(event)}
                 color="teal"
                 style={{ marginLeft: 10 }}
               >
                 Kampa Katıl
               </Button>
+            )}
+            {!authenticated && !event.cancelled && (
+              <Button
+                loading={loading}
+                onClick={() => openModal('UnauthModal')}
+                color="teal"
+                style={{ marginLeft: 10 }}
+              >
+                Kampa Katıl
+              </Button>
+            )}
+            {event.cancelled && !isHost && (
+              <Label size="large" color="red" content="Etkinlik iptal edildi" />
             )}
           </div>
         )}

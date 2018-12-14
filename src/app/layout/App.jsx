@@ -6,9 +6,6 @@ import ReduxToastr from 'react-redux-toastr';
 import AboutPage from '../../features/about/AboutPage';
 import HomePage from '../../features/home/HomePage';
 import NavBar from '../../features/nav/NavBar/NavBar';
-import CampingSiteForm from '../../features/campingSite/CampingSiteForm/CampingSiteForm';
-import CampingSitePage from '../../features/campingSite/CampingSitePage/CampingSitePage';
-import CampingSitesPage from '../../features/campingSite/CampingSitesPage/CampingSitesPage';
 import CampingEventForm from '../../features/campingEvent/CampingEventForm/CampingEventForm';
 import CampingEventPage from '../../features/campingEvent/CampingEventPage/CampingEventPage';
 import CampingEventsPage from '../../features/campingEvent/CampingEventsPage/CampingEventsPage';
@@ -18,6 +15,8 @@ import UserProfilePage from '../../features/user/UserProfilePage/UserProfilePage
 import ModalManager from '../../features/modals/ModalManager';
 import ScrollToTop from '../common/util/ScrollToTop';
 import 'react-redux-toastr/lib/css/react-redux-toastr.min.css';
+import { UserIsAuthenticated } from '../../features/auth/authWrapper';
+import NotFound from './NotFound';
 
 class App extends Component {
   render() {
@@ -41,28 +40,12 @@ class App extends Component {
                     <Switch>
                       <Route path="/about" component={AboutPage} />
                       <Route
-                        path="/createCampingSite"
-                        component={CampingSiteForm}
-                      />
-                      <Route
-                        path="/editCampingSite"
-                        component={CampingSiteForm}
-                      />
-                      <Route
-                        path="/campingSites/:id"
-                        component={CampingSitePage}
-                      />
-                      <Route
-                        path="/campingSites"
-                        component={CampingSitesPage}
-                      />
-                      <Route
                         path="/createCampingEvent"
-                        component={CampingEventForm}
+                        component={UserIsAuthenticated(CampingEventForm)}
                       />
                       <Route
                         path="/manageCampingEvent/:id"
-                        component={CampingEventForm}
+                        component={UserIsAuthenticated(CampingEventForm)}
                       />
                       <Route
                         path="/campingEvents/:id"
@@ -72,9 +55,20 @@ class App extends Component {
                         path="/campingEvents"
                         component={CampingEventsPage}
                       />
-                      <Route path="/people" component={PeoplePage} />
-                      <Route path="/profile/:id" component={UserProfilePage} />
-                      <Route path="/settings" component={SettingsPage} />
+                      <Route
+                        path="/people"
+                        component={UserIsAuthenticated(PeoplePage)}
+                      />
+                      <Route
+                        path="/profile/:id"
+                        component={UserIsAuthenticated(UserProfilePage)}
+                      />
+                      <Route
+                        path="/settings"
+                        component={UserIsAuthenticated(SettingsPage)}
+                      />
+                      <Route path="/error" component={NotFound} />
+                      <Route component={NotFound} />
                     </Switch>
                   </Container>
                 </div>

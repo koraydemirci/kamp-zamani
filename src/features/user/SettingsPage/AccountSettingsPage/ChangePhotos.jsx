@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
+import { toastr } from 'react-redux-toastr';
 import Dropzone from 'react-dropzone';
 import Cropper from 'react-cropper';
 import {
@@ -92,7 +93,12 @@ class ChangePhotos extends Component {
   };
 
   handleSetMainPhoto = photo => async () => {
-    this.props.setMainPhoto(photo);
+    try {
+      await this.props.setMainPhoto(photo);
+      toastr.success('Başarılı!', 'Profil resmi değiştirildi');
+    } catch (error) {
+      toastr.error('Hata!', 'Profil resmi değiştirilemedi');
+    }
   };
 
   handlePhotoDelete = photo => () => {
@@ -188,6 +194,7 @@ class ChangePhotos extends Component {
                 <Image src={photo.url} style={{ width: '100%' }} />
                 <div className="ui two buttons">
                   <Button
+                    loading={loading}
                     onClick={this.handleSetMainPhoto(photo)}
                     basic
                     color="green"

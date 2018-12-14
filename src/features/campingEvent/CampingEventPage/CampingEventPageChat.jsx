@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Segment, Header, Comment } from 'semantic-ui-react';
+import { Segment, Header, Comment, Button, Divider } from 'semantic-ui-react';
 import CampingEventChatForm from './CampingEventChatForm';
 
 class CampingEventPageChat extends Component {
@@ -24,7 +24,13 @@ class CampingEventPageChat extends Component {
   };
 
   render() {
-    const { addEventComment, eventId, eventChat } = this.props;
+    const {
+      addEventComment,
+      eventId,
+      eventChat,
+      authenticated,
+      openModal
+    } = this.props;
     const { showReplyForm, selectedCommentId } = this.state;
 
     return (
@@ -135,12 +141,24 @@ class CampingEventPageChat extends Component {
                 </Comment>
               ))}
           </Comment.Group>
-          <CampingEventChatForm
-            addEventComment={addEventComment}
-            eventId={eventId}
-            form={'newComment'}
-            parentId={0}
-          />
+          {authenticated ? (
+            <CampingEventChatForm
+              addEventComment={addEventComment}
+              eventId={eventId}
+              form={'newComment'}
+              parentId={0}
+            />
+          ) : (
+            <div>
+              <Divider />
+              <p>Yorum yapmak için giriş yapınız</p>
+              <Button
+                onClick={() => openModal('LoginModal')}
+                color="teal"
+                content="Giriş"
+              />
+            </div>
+          )}
         </Segment>
       </div>
     );

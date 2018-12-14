@@ -10,6 +10,9 @@ import CampingEventPageChat from './CampingEventPageChat';
 import CampingEventPageSidebar from './CampingEventPageSidebar';
 import { goingToEvent, cancelGoingToEvent } from '../../user/UserActions';
 import { addEventComment } from '../eventActions';
+import { openModal } from '../../modals/modalActions';
+import LoadingComponent from '../../../app/layout/LoadingComponent';
+
 import {
   objectToArray,
   createDataTree
@@ -32,7 +35,9 @@ const mapState = (state, ownProps) => {
   }
 
   return {
+    requesting: state.firestore.status.requesting,
     event: selectedEvent,
+    loading: state.async.loading,
     attendees,
     auth: state.firebase.auth,
     eventChat:
@@ -44,24 +49,30 @@ const mapState = (state, ownProps) => {
 const actions = {
   goingToEvent,
   cancelGoingToEvent,
-  addEventComment
+  addEventComment,
+  openModal
 };
 
 class CampingEventPage extends Component {
+  state = {
+    initialLoading: true
+  };
+
   async componentDidMount() {
     const { firestore, match } = this.props;
-    firestore.setListeners([
-      { collection: 'events', doc: match.params.id },
-      { collection: 'event_attendee' }
-    ]);
+    let event = await firestore.get(`events/${match.params.id}`);
+    if (!event.exists) {
+      this.props.history.push('/error');
+    }
+    firestore.setListeners([{ collection: 'events', doc: match.params.id }]);
+    this.setState({
+      initialLoading: false
+    });
   }
 
   async componentWillUnmount() {
     const { firestore, match } = this.props;
-    firestore.unsetListeners([
-      { collection: 'events', doc: match.params.id },
-      { collection: 'event_attendee' }
-    ]);
+    firestore.unsetListeners([{ collection: 'events', doc: match.params.id }]);
   }
   render() {
     const {
@@ -69,37 +80,58 @@ class CampingEventPage extends Component {
       auth,
       goingToEvent,
       cancelGoingToEvent,
-      attendees,
       addEventComment,
-      eventChat
+      eventChat,
+      loading,
+      openModal,
+      requesting,
+      match
     } = this.props;
-    const isHost = event && event.hostUid === auth.uid;
-    const isGoing =
-      attendees && attendees.some(attendee => attendee.userUid === auth.uid);
-    const chatTree = !isEmpty(eventChat) && createDataTree(eventChat);
 
-    return event ? (
+    const attendees =
+      event &&
+      event.attendees &&
+      objectToArray(event.attendees).sort(function(a, b) {
+        return a.joinDate - b.joinDate;
+      });
+
+    const isHost = event && event.hostUid === auth.uid;
+    const isGoing = attendees && attendees.some(a => a.id === auth.uid);
+    const chatTree = !isEmpty(eventChat) && createDataTree(eventChat);
+    const authenticated = auth.isLoaded && !auth.isEmpty;
+    const loadingEvent = requesting[`events/${match.params.id}`];
+
+    if (loadingEvent || this.state.initialLoading)
+      return <LoadingComponent inverted={true} />;
+
+    return (
       <Grid>
         <Grid.Column width={10}>
           <CampingEventPageHeader
+            loading={loading}
             event={event}
             isHost={isHost}
             isGoing={isGoing}
             goingToEvent={goingToEvent}
             cancelGoingToEvent={cancelGoingToEvent}
+            authenticated={authenticated}
+            openModal={openModal}
           />
           <CampingEventPageInfo event={event} />
+
           <CampingEventPageChat
+            authenticated={authenticated}
             addEventComment={addEventComment}
             eventId={event.id}
             eventChat={chatTree}
+            openModal={openModal}
           />
         </Grid.Column>
         <Grid.Column width={6}>
           <CampingEventPageSidebar attendees={attendees} />
         </Grid.Column>
       </Grid>
-    ) : null;
+    );
   }
 }
 

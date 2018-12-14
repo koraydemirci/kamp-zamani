@@ -29,7 +29,7 @@ const LoginForm = ({ login, handleSubmit, error, socialLogin }) => {
           placeholder="Şifre"
         />
         {error && (
-          <Label basic color="red">
+          <Label basic color="red" style={{ marginBottom: 10 }}>
             {error}
           </Label>
         )}

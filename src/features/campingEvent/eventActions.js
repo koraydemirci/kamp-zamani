@@ -1,4 +1,5 @@
 import { toastr } from 'react-redux-toastr';
+import compareAsc from 'date-fns/compare_asc';
 
 import firebase from '../../app/config/firebase';
 import { createNewEvent } from '../../app/common/util/helpers';
@@ -14,8 +15,8 @@ export const createEvent = event => {
     const firebase = getFirebase();
     const firestore = getFirestore();
     const user = firebase.auth().currentUser;
-    const photoURL = getState().firebase.profile.photoURL;
-    let newEvent = createNewEvent(user, photoURL, event);
+    const profile = getState().firebase.profile;
+    let newEvent = createNewEvent(user, profile, event);
     try {
       let createdEvent = await firestore.add(`events`, newEvent);
       await firestore.set(`event_attendee/${createdEvent.id}_${user.uid}`, {
@@ -23,8 +24,8 @@ export const createEvent = event => {
         userUid: user.uid,
         eventDate: event.date,
         host: true,
-        displayName: user.displayName,
-        photoURL
+        displayName: profile.displayName,
+        photoURL: profile.photoURL
       });
       toastr.success('Başarılı', 'Kamp tarihi oluşturuldu');
     } catch (error) {
@@ -34,14 +35,46 @@ export const createEvent = event => {
 };
 
 export const updateEvent = event => {
-  return async (dispatch, getState, { getFirestore }) => {
-    const firestore = getFirestore();
+  return async (dispatch, getState) => {
+    dispatch(asyncActionStart());
+    const firestore = firebase.firestore();
 
     try {
-      await firestore.update(`events/${event.id}`, event);
+      let eventDocRef = firestore.collection('events').doc(event.id);
+      let dateEqual = compareAsc(
+        Date(getState().firestore.ordered.events[0].date),
+        event.date.toString()
+      );
+
+      if (dateEqual !== 0) {
+        let batch = firestore.batch();
+        await batch.update(eventDocRef, event);
+
+        let eventAttendeeRef = firestore.collection('event_attendee');
+        let eventAttendeeQuery = await eventAttendeeRef.where(
+          'eventId',
+          '==',
+          event.id
+        );
+        let eventAttendeeQuerySnap = await eventAttendeeQuery.get();
+
+        for (let i = 0; i < eventAttendeeQuerySnap.docs.length; i++) {
+          let eventAttendeeDocRef = await firestore
+            .collection('event_attendee')
+            .doc(eventAttendeeQuerySnap.docs[i].id);
+          await batch.update(eventAttendeeDocRef, {
+            eventDate: event.date
+          });
+        }
+        await batch.commit();
+      } else {
+        await eventDocRef.update(event);
+      }
+      dispatch(asyncActionFinish());
       toastr.success('Başarılı', 'Etkinlik güncellendi');
     } catch (error) {
       console.log(error);
+      dispatch(asyncActionError());
       toastr.error('Hata!', 'Etkinlik güncellenemedi');
     }
   };

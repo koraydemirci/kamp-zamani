@@ -10,7 +10,7 @@ export const login = ({ email, password }) => {
     } catch (error) {
       console.log(error);
       throw new SubmissionError({
-        _error: 'Login failed'
+        _error: 'Kullanıcı adı ya da şifre hatalı'
       });
     }
   };
@@ -40,7 +40,7 @@ export const registerUser = ({ email, password, displayName }) => async (
   } catch (error) {
     console.log(error);
     throw new SubmissionError({
-      _error: error.message
+      _error: 'Bu email adresi ile başka bir hesap açılmış'
     });
   }
 };

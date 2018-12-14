@@ -59,7 +59,6 @@ class ProfileSettingsPage extends Component {
   editProfile = user => {
     this.props.updateProfile(user);
     const userId = this.props.userId;
-    console.log(this.props);
     this.props.history.push(`/profile/${userId}`);
   };
 

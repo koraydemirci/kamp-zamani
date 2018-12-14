@@ -45,12 +45,6 @@ class NavBar extends Component {
           <Menu.Item
             as={NavLink}
             exact
-            to="/campingSites"
-            content="Kamp Yerleri"
-          />
-          <Menu.Item
-            as={NavLink}
-            exact
             to="/campingEvents"
             content="Kamp Tarihleri"
           />

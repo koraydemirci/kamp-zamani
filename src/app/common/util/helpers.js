@@ -6,19 +6,19 @@ export const objectToArray = object => {
   }
 };
 
-export const createNewEvent = (user, photoURL, event) => {
+export const createNewEvent = (user, profile, event) => {
   return {
     ...event,
     hostUid: user.uid,
-    hostedBy: user.displayName,
-    hostPhotoURL: photoURL || '/assets/user.png',
+    hostedBy: profile.displayName,
+    hostPhotoURL: profile.photoURL || '/assets/user.png',
     created: Date.now(),
     attendees: {
       [user.uid]: {
         going: true,
         joinDate: Date.now(),
-        photoURL: photoURL || '/assets/user.png',
-        displayName: user.displayName,
+        photoURL: profile.photoURL || '/assets/user.png',
+        displayName: profile.displayName,
         host: true
       }
     }

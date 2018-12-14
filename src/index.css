@@ -115,3 +115,7 @@ body {
 .DayPicker *:focus {
   outline: none;
 }
+
+div.ui.sticky {
+  z-index: -100;
+}

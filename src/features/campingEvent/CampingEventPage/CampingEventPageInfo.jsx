@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Segment, Grid, Icon } from 'semantic-ui-react';
 import Script from 'react-load-script';
-import MapContainer from '../../../app/common/map/MapContainer';
+import InfoMapContainer from '../../../app/common/map/InfoMapContainer';
 
 class CampingEventPageInfo extends Component {
   state = {
@@ -14,10 +14,11 @@ class CampingEventPageInfo extends Component {
     const {
       event: { description, date, city, markerLocation }
     } = this.props;
+    const { scriptLoaded } = this.state;
 
     return (
       <Segment.Group>
-        {!this.state.scriptLoaded && (
+        {!scriptLoaded && (
           <Script
             url="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_3h84p1JJpl_a0Th2Y34HpTozfQuzJ18&libraries=places"
             onLoad={this.handleScriptLoaded}
@@ -61,7 +62,9 @@ class CampingEventPageInfo extends Component {
             </Grid.Column>
           </Grid>
         </Segment>
-        {false && <MapContainer cityLatLng={markerLocation} />}
+        {scriptLoaded && markerLocation && (
+          <InfoMapContainer cityLatLng={markerLocation} />
+        )}
       </Segment.Group>
     );
   }

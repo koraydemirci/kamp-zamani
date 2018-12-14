@@ -45,6 +45,12 @@ const actions = {
 
 class UserProfilePage extends Component {
   async componentDidMount() {
+    let user = await this.props.firestore.get(
+      `users/${this.props.match.params.id}`
+    );
+    if (!user.exists) {
+      this.props.history.push('/error');
+    }
     await this.props.getUserEvents(this.props.userUid);
   }
 
@@ -66,7 +72,7 @@ class UserProfilePage extends Component {
       unfollowUser
     } = this.props;
     const isCurrentUser = auth.uid === match.params.id;
-    const loading = Object.values(requesting).some(a => a === true);
+    const loading = requesting[`users/${match.params.id}`];
     const isFollowing = !isEmpty(following);
 
     return loading ? (

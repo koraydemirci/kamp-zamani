@@ -16,7 +16,7 @@ import TextInput from '../../../app/common/form/TextInput';
 import TextArea from '../../../app/common/form/TextArea';
 import DateInput from '../../../app/common/form/DateInput';
 import PlaceInput from '../../../app/common/form/PlaceInput';
-import MapContainer from '../../../app/common/map/MapContainer';
+import FormMapContainer from '../../../app/common/map/FormMapContainer';
 
 const mapState = (state, ownProps) => {
   const eventId = ownProps.match.params.id;
@@ -29,7 +29,8 @@ const mapState = (state, ownProps) => {
 
   return {
     initialValues: selectedEvent,
-    event: selectedEvent
+    event: selectedEvent,
+    loading: state.async.loading
   };
 };
 
@@ -92,21 +93,21 @@ class CampingEventForm extends Component {
     this.setState({ markerLocation });
   };
 
-  onFormSubmit = values => {
+  onFormSubmit = async values => {
     if (Object.keys(this.state.markerLocation).length !== 0)
       values.markerLocation = this.state.markerLocation;
 
     if (this.props.initialValues && this.props.initialValues.id) {
-      this.props.updateEvent(values);
+      await this.props.updateEvent(values);
       this.props.history.goBack();
     } else {
-      this.props.createEvent(values);
+      await this.props.createEvent(values);
       this.props.history.push('/campingEvents');
     }
   };
 
   render() {
-    const { history, handleSubmit, event, cancelToggle } = this.props;
+    const { loading, history, handleSubmit, event, cancelToggle } = this.props;
     const { cityLatLng, scriptLoaded, selectedDay } = this.state;
 
     return (
@@ -158,7 +159,7 @@ class CampingEventForm extends Component {
               {scriptLoaded && Object.keys(cityLatLng).length !== 0 && (
                 <div>
                   <p>Lütfen kamp yapılacak yeri harita üzerinde seçiniz</p>
-                  <MapContainer
+                  <FormMapContainer
                     cityLatLng={cityLatLng}
                     onMapSelect={this.handleCampLocation}
                   />
@@ -173,15 +174,16 @@ class CampingEventForm extends Component {
               />
               <Button
                 // disabled={invalid || submitting || pristine}
+                loading={loading}
                 positive
                 type="submit"
               >
                 Gönder
               </Button>
-              <Button onClick={history.goBack} type="button">
+              <Button disabled={loading} onClick={history.goBack} type="button">
                 İptal
               </Button>
-              {event && (
+              {event && event.id && (
                 <Button
                   onClick={() => cancelToggle(!event.cancelled, event.id)}
                   type="button"
