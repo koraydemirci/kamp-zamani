@@ -2,7 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Form, Segment, Button, Label, Divider } from 'semantic-ui-react';
 import { Field, reduxForm } from 'redux-form';
-import { combineValidators, isRequired } from 'revalidate';
+import {
+  combineValidators,
+  isRequired,
+  composeValidators,
+  matchesField,
+  hasLengthGreaterThan
+} from 'revalidate';
 
 import TextInput from '../../../app/common/form/TextInput';
 import SocialLogin from '../SocialLogin/SocialLogin';
@@ -14,19 +20,24 @@ const actions = {
 };
 
 const validate = combineValidators({
-  displayName: isRequired('displayName'),
-  email: isRequired('email'),
-  password: isRequired('password')
+  displayName: isRequired({ message: 'Kullanıcı adınızı giriniz' }),
+  email: isRequired({ message: 'Email adresinizi giriniz' }),
+  password: composeValidators(
+    isRequired({ message: 'Şifrenizi giriniz' }),
+    hasLengthGreaterThan(5)({
+      message: 'Şifreniz en az 6 karakter olmalı'
+    })
+  )(),
+  password2: composeValidators(
+    isRequired({ message: 'Şifreyi tekrar giriniz' }),
+    hasLengthGreaterThan(5)({
+      message: 'Şifreniz en az 6 karakter olmalı'
+    }),
+    matchesField('password')({ message: 'Şifreler aynı değil' })
+  )()
 });
 
-const RegisterForm = ({
-  registerUser,
-  handleSubmit,
-  error,
-  invalid,
-  submitting,
-  socialLogin
-}) => {
+const RegisterForm = ({ registerUser, handleSubmit, error, socialLogin }) => {
   return (
     <div>
       <Form size="large" onSubmit={handleSubmit(registerUser)}>
@@ -49,17 +60,18 @@ const RegisterForm = ({
             component={TextInput}
             placeholder="Şifre"
           />
+          <Field
+            name="password2"
+            type="password"
+            component={TextInput}
+            placeholder="Şifre Tekrar"
+          />
           {error && (
             <Label basic color="red" style={{ marginBottom: 10 }}>
               {error}
             </Label>
           )}
-          <Button
-            disabled={invalid || submitting}
-            fluid
-            size="large"
-            color="teal"
-          >
+          <Button fluid size="large" positive>
             Üye Ol
           </Button>
           <Divider horizontal>Veya</Divider>

@@ -1,4 +1,5 @@
-import { SubmissionError } from 'redux-form';
+import { SubmissionError, reset } from 'redux-form';
+import { toastr } from 'react-redux-toastr';
 import { closeModal } from '../modals/modalActions';
 
 export const login = ({ email, password }) => {
@@ -37,6 +38,7 @@ export const registerUser = ({ email, password, displayName }) => async (
       displayName
     });
     dispatch(closeModal());
+    toastr.success('Başarılı', 'Üyeliğiniz başarıyla oluşturuldu');
   } catch (error) {
     console.log(error);
     throw new SubmissionError({
@@ -70,5 +72,46 @@ export const socialLogin = selectedProvider => async (
     }
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const updatePassword = creds => async (
+  dispatch,
+  getState,
+  { getFirebase }
+) => {
+  const firebase = getFirebase();
+  const user = firebase.auth().currentUser;
+  try {
+    const credential = firebase.auth.EmailAuthProvider.credential(
+      user.email,
+      creds.oldPassword
+    );
+    await user.reauthenticateAndRetrieveDataWithCredential(credential);
+
+    await user.updatePassword(creds.newPassword1);
+    await dispatch(reset('account'));
+    toastr.success('Başarılı', 'Şifreniz değiştirildi');
+  } catch (error) {
+    throw new SubmissionError({
+      _error: 'Şifreniz değiştirilirken hata oluştu'
+    });
+  }
+};
+
+export const resetPasswordByEmail = value => async (
+  dispatch,
+  getState,
+  { getFirebase }
+) => {
+  const firebase = getFirebase();
+  try {
+    firebase.auth().sendPasswordResetEmail(value.email);
+    toastr.success('Başarılı', 'Şifrenizi yenilemek için email gönderildi');
+    dispatch(closeModal());
+  } catch (error) {
+    throw new SubmissionError({
+      _error: 'Şifreniz değiştirilirken hata oluştu'
+    });
   }
 };

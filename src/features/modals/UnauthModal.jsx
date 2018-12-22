@@ -9,7 +9,7 @@ const actions = { closeModal, openModal };
 
 class UnauthModal extends Component {
   handleCloseModal = () => {
-    if (this.props.location.pathname.includes('/campingEvent')) {
+    if (this.props.location.pathname.includes('/place')) {
       this.props.closeModal();
     } else {
       this.props.history.goBack();
@@ -20,15 +20,14 @@ class UnauthModal extends Component {
   render() {
     const { openModal } = this.props;
     return (
-      <Modal size="mini" open={true} onClose={this.handleCloseModal}>
-        <Modal.Header>Devam etmek giriş yapmış olmalısınız!</Modal.Header>
+      <Modal size="mini" open={true} onClose={this.handleCloseModal} closeIcon>
         <Modal.Content>
           <Modal.Description>
-            <p>Sayfayı görüntülemek için giriş yapın yada üye olun</p>
+            <p>Devam etmek için giriş yapın yada üye olun</p>
             <div widths={4} style={{ textAlign: 'center' }}>
               <Button
                 style={{ marginRight: 30 }}
-                color="teal"
+                positive
                 onClick={() => openModal('LoginModal')}
               >
                 Giriş

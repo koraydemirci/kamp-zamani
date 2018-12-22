@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
-import { toastr } from 'react-redux-toastr';
 import Dropzone from 'react-dropzone';
 import Cropper from 'react-cropper';
 import {
@@ -95,10 +94,7 @@ class ChangePhotos extends Component {
   handleSetMainPhoto = photo => async () => {
     try {
       await this.props.setMainPhoto(photo);
-      toastr.success('Başarılı!', 'Profil resmi değiştirildi');
-    } catch (error) {
-      toastr.error('Hata!', 'Profil resmi değiştirilemedi');
-    }
+    } catch (error) {}
   };
 
   handlePhotoDelete = photo => () => {
@@ -116,11 +112,11 @@ class ChangePhotos extends Component {
 
     return (
       <Segment>
-        <Header dividing size="large" content="Profil Resmi" />
-        <Grid>
+        <Header color="teal" dividing size="large" content="Profil Resmi" />
+        <Grid stackable>
           <Grid.Row />
-          <Grid.Column width={4}>
-            <Header color="teal" content="1 - Resim ekle" />
+          <Grid.Column width={5}>
+            <Header size="small" content="1 - Resim ekle" />
             <Dropzone onDrop={this.onDrop} multiple={false}>
               <div style={{ padding: '20px', textAlign: 'center' }}>
                 <Icon name="upload" size="big" />
@@ -128,9 +124,9 @@ class ChangePhotos extends Component {
               </div>
             </Dropzone>
           </Grid.Column>
-          <Grid.Column width={1} />
-          <Grid.Column width={4}>
-            <Header color="teal" content="2 - Resmi Boyutlandır" />
+
+          <Grid.Column width={5}>
+            <Header size="small" content="2 - Resmi Boyutlandır" />
             {this.state.files[0] && (
               <Cropper
                 style={{ height: 200, width: '100%' }}
@@ -147,9 +143,9 @@ class ChangePhotos extends Component {
               />
             )}
           </Grid.Column>
-          <Grid.Column width={1} />
-          <Grid.Column width={4}>
-            <Header color="teal" content="3 - Resmi Yükle" />
+
+          <Grid.Column width={6}>
+            <Header size="small" content="3 - Resmi Yükle" />
             {this.state.files[0] && (
               <div>
                 <Image
@@ -179,7 +175,7 @@ class ChangePhotos extends Component {
         <Divider />
         <Header color="teal" content="Profil Resimleri" />
 
-        <Card.Group itemsPerRow={5}>
+        <Card.Group doubling itemsPerRow={4}>
           <Card>
             <Image
               src={profile.photoURL || '/assets/user.png'}

@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
-import { Menu, Container, Button } from 'semantic-ui-react';
+import { Button, Menu, Container, Icon, Responsive } from 'semantic-ui-react';
 import { withFirebase } from 'react-redux-firebase';
 import { connect } from 'react-redux';
-import { NavLink, Link, withRouter } from 'react-router-dom';
+import { NavLink, withRouter } from 'react-router-dom';
 
 import { openModal } from '../../modals/modalActions';
+import { openSidebar } from '../sidebarActions';
 import SignedOutMenu from '../Menus/SignedOutMenu';
 import SignedInMenu from '../Menus/SignedInMenu';
 
 const actions = {
-  openModal
+  openModal,
+  openSidebar
 };
 
 const mapState = state => ({
@@ -32,36 +34,20 @@ class NavBar extends Component {
   };
 
   render() {
-    const { auth, profile } = this.props;
+    const { auth, profile, openSidebar } = this.props;
     const authenticated = auth.isLoaded && !auth.isEmpty;
 
     return (
       <Menu inverted fixed="top">
-        <Container>
-          <Menu.Item as={NavLink} to="/about" header>
+        <Responsive as={Container} minWidth={992}>
+          <Menu.Item as={NavLink} to="/about">
             <img src="/assets/logo.png" alt="logo" />
             KAMP ZAMANI
           </Menu.Item>
-          <Menu.Item
-            as={NavLink}
-            exact
-            to="/campingEvents"
-            content="Kamp Tarihleri"
-          />
+          <Menu.Item as={NavLink} to="/places" content="Kamp Yerleri" />
+          <Menu.Item as={NavLink} exact to="/events" content="Kamp Tarihleri" />
           {authenticated && (
-            <Menu.Item as={NavLink} to="/people" content="Kamp Arkadaşlarım" />
-          )}
-          {authenticated && (
-            <Menu.Item>
-              <Button
-                as={Link}
-                to="/createCampingEvent"
-                floated="right"
-                positive
-                inverted
-                content="Kamp Organize Et"
-              />
-            </Menu.Item>
+            <Menu.Item as={NavLink} to="/people" content="Arkadaşlarım" />
           )}
           {authenticated ? (
             <SignedInMenu
@@ -75,7 +61,40 @@ class NavBar extends Component {
               signIn={this.handleSignIn}
             />
           )}
-        </Container>
+        </Responsive>
+        <Responsive as={Container} maxWidth={992} style={{ border: 0 }}>
+          <Menu.Item
+            onClick={openSidebar}
+            as={Button}
+            style={{
+              marginTop: 5,
+              color: 'white'
+            }}
+          >
+            <Icon
+              name="bars"
+              style={{
+                marginBottom: 5
+              }}
+            />{' '}
+            Menü
+          </Menu.Item>
+          {authenticated ? (
+            <Menu.Item position="right">
+              <Button
+                onClick={this.handleSignOut}
+                basic
+                inverted
+                content="Çıkış"
+              />
+            </Menu.Item>
+          ) : (
+            <SignedOutMenu
+              register={this.handleRegister}
+              signIn={this.handleSignIn}
+            />
+          )}
+        </Responsive>
       </Menu>
     );
   }

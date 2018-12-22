@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 
 const SettingsNav = () => {
   return (
-    <Menu vertical>
+    <Menu vertical fluid>
       <Header
         icon="settings"
         attached

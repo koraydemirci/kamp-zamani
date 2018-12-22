@@ -1,30 +1,31 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Card, Grid, Header, Image, Tab, Segment } from 'semantic-ui-react';
+import { Card, Header, Image, Tab, Segment } from 'semantic-ui-react';
 
 const panes = [
-  { menuItem: 'Bütün Etkinliklerim', pane: { key: 'hepsi' } },
-  { menuItem: 'Geçmiş Etkinliklerim', pane: { key: 'gecmis' } },
-  { menuItem: 'Gelecek Etkinliklerim', pane: { key: 'gelecek' } },
-  { menuItem: 'Düzenlediğim Etkinlikler', pane: { key: 'duzenledigim' } }
+  { menuItem: 'Hepsi', pane: { key: 'hepsi' } },
+  { menuItem: 'Geçmiş', pane: { key: 'gecmis' } },
+  { menuItem: 'Gelecek', pane: { key: 'gelecek' } },
+  { menuItem: 'Düzenlediklerim', pane: { key: 'duzenledigim' } }
 ];
 
 const UserProfileEvents = ({ events, eventsLoading, changeTab }) => {
   return (
-    <Grid.Column width={12}>
-      <Segment attached loading={eventsLoading}>
-        <Header icon="calendar" content="Etkinliklerim" />
-        <Tab
-          onTabChange={(e, data) => changeTab(e, data)}
-          panes={panes}
-          menu={{ secondary: true, pointing: true }}
-          style={{ marginBottom: 20 }}
-        />
-
-        <Card.Group itemsPerRow={4}>
+    <Segment loading={eventsLoading}>
+      <Header color="teal" content="Dahil Olduğu Etkinlikler" />
+      <Tab
+        onTabChange={(e, data) => changeTab(e, data)}
+        panes={panes}
+        menu={{ secondary: true, pointing: true, stackable: true }}
+        style={{ marginBottom: 20 }}
+      />
+      {events && events.length === 0 ? (
+        <p style={{ margin: 20 }}>Katıldığı bir etkinlik yok</p>
+      ) : (
+        <Card.Group doubling itemsPerRow={4}>
           {events &&
             events.map(event => (
-              <Card as={Link} to={`/campingEvents/${event.id}`} key={event.id}>
+              <Card as={Link} to={`/events/${event.id}`} key={event.id}>
                 <Image src={`/assets/event-detail-page.jpg`} />
                 <Card.Content>
                   <Card.Header textAlign="center">{event.title}</Card.Header>
@@ -42,8 +43,8 @@ const UserProfileEvents = ({ events, eventsLoading, changeTab }) => {
               </Card>
             ))}
         </Card.Group>
-      </Segment>
-    </Grid.Column>
+      )}
+    </Segment>
   );
 };
 

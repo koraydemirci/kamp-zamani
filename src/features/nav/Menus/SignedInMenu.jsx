@@ -7,8 +7,18 @@ const SignedInMenu = ({ profile, auth, signOut }) => (
     <Image avatar spaced="right" src={profile.photoURL || '/assets/user.png'} />
     <Dropdown pointing="top left" text={profile.displayName}>
       <Dropdown.Menu>
-        <Dropdown.Item text="Kamp Tarihlerim" icon="calendar" />
-        <Dropdown.Item text="Kamp Arkadaşlarım" icon="users" />
+        <Dropdown.Item
+          as={Link}
+          to="/createEvent"
+          text="Etkinlik Ekle"
+          icon="fire"
+        />
+        <Dropdown.Item
+          as={Link}
+          to="/createPlace"
+          text="Kamp Yeri Ekle"
+          icon="map marker alternate"
+        />
         <Dropdown.Item
           as={Link}
           to={`/profile/${auth.uid}`}

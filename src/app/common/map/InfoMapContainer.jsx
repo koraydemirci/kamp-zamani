@@ -26,7 +26,7 @@ class InnerMap extends React.Component {
 
 const Map = withGoogleMap(InnerMap);
 
-class FormMapContainer extends React.Component {
+class InfoMapContainer extends React.Component {
   render() {
     return (
       <div style={{ height: '100%' }}>
@@ -43,4 +43,4 @@ class FormMapContainer extends React.Component {
   }
 }
 
-export default FormMapContainer;
+export default InfoMapContainer;

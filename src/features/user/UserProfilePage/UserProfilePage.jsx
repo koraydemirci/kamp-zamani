@@ -12,6 +12,7 @@ import UserProfileEvents from './UserProfileEvents';
 import { userDetailedQuery } from '../userQueries';
 import { getUserEvents, followUser, unfollowUser } from '../UserActions';
 import LoadingComponent from '../../../app/layout/LoadingComponent';
+import { closeSidebar } from '../../nav/sidebarActions';
 
 const mapState = (state, ownProps) => {
   let profile = {};
@@ -40,11 +41,13 @@ const mapState = (state, ownProps) => {
 const actions = {
   getUserEvents,
   followUser,
-  unfollowUser
+  unfollowUser,
+  closeSidebar
 };
 
 class UserProfilePage extends Component {
   async componentDidMount() {
+    this.props.closeSidebar();
     let user = await this.props.firestore.get(
       `users/${this.props.match.params.id}`
     );
@@ -78,22 +81,27 @@ class UserProfilePage extends Component {
     return loading ? (
       <LoadingComponent inverted={true} />
     ) : (
-      <Grid>
-        <UserProfileHeader Header profile={profile} />
-        <UserProfileDescription profile={profile} />
-        <UserProfileSidebar
-          isFollowing={isFollowing}
-          profile={profile}
-          followUser={followUser}
-          unfollowUser={unfollowUser}
-          isCurrentUser={isCurrentUser}
-        />
-        {photos && photos.length > 0 && <UserProfilePhotos photos={photos} />}
-        <UserProfileEvents
-          changeTab={this.changeTab}
-          events={events}
-          eventsLoading={eventsLoading}
-        />
+      <Grid stackable reversed="mobile">
+        <Grid.Column width={12}>
+          <UserProfileHeader Header profile={profile} />
+          <UserProfileDescription profile={profile} />
+
+          {photos && photos.length > 0 && <UserProfilePhotos photos={photos} />}
+          <UserProfileEvents
+            changeTab={this.changeTab}
+            events={events}
+            eventsLoading={eventsLoading}
+          />
+        </Grid.Column>
+        <Grid.Column width={4}>
+          <UserProfileSidebar
+            isFollowing={isFollowing}
+            profile={profile}
+            followUser={followUser}
+            unfollowUser={unfollowUser}
+            isCurrentUser={isCurrentUser}
+          />
+        </Grid.Column>
       </Grid>
     );
   }

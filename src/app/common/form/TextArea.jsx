@@ -5,12 +5,13 @@ const TextArea = ({
   input,
   rows,
   width,
-  type,
+  label,
   placeholder,
   meta: { touched, error }
 }) => {
   return (
     <Form.Field error={touched && !!error} width={width}>
+      <label>{label}</label>
       <textarea {...input} placeholder={placeholder} rows={rows} />
       {touched && error && (
         <Label basic color="red" style={{ marginTop: 5 }}>

@@ -7,7 +7,7 @@ import {
   asyncActionStart,
   asyncActionFinish
 } from '../async/asyncActions';
-import { FETCH_EVENTS } from '../campingEvent/eventConstants';
+import { FETCH_EVENTS } from '../event/eventConstants';
 
 export const updateProfile = updatedUser => async (
   dispatch,
@@ -17,10 +17,10 @@ export const updateProfile = updatedUser => async (
   const firebase = getFirebase();
   try {
     await firebase.updateProfile(updatedUser);
-    toastr.success('Başarılı', 'Profil güncellendi');
+    toastr.success('Başarılı', 'Profiliniz güncellendi');
   } catch (error) {
     console.log(error);
-    toastr.error('Hata!', 'Profil güncellenemedi');
+    // toastr.error('Hata!', 'Profil güncellenemedi');
   }
 };
 
@@ -64,11 +64,11 @@ export const uploadProfileImage = (file, fileName) => async (
       }
     );
     dispatch(asyncActionFinish());
-    toastr.success('Başarılı!', 'Resim eklendi');
+    toastr.success('Başarılı!', 'Resminiz eklendi');
   } catch (error) {
     console.log(error);
     dispatch(asyncActionError());
-    toastr.error('Hata!', 'Resim eklenemedi');
+    // toastr.error('Hata!', 'Resim eklenemedi');
   }
 };
 
@@ -90,7 +90,7 @@ export const deletePhoto = photo => async (
     toastr.success('Başarılı!', 'Resim silindi');
   } catch (error) {
     console.log(error);
-    toastr.error('Hata', 'Resim silinemedi');
+    // toastr.error('Hata', 'Resim silinemedi');
   }
 };
 
@@ -133,9 +133,11 @@ export const setMainPhoto = photo => async (dispatch, getState) => {
 
     await batch.commit();
     dispatch(asyncActionFinish());
+    toastr.success('Başarılı!', 'Profil resminiz degiştirildi');
   } catch (error) {
     console.log(error);
     dispatch(asyncActionError());
+    // toastr.error('Hata!', 'Profil resmi değiştirilemedi');
     throw new Error('Problem setting main photo');
   }
 };
@@ -177,7 +179,7 @@ export const goingToEvent = event => async (dispatch, getState) => {
   } catch (error) {
     console.log(error);
     dispatch(asyncActionError());
-    toastr.error('Hata!', 'Etkinliğe katılamadınız');
+    // toastr.error('Hata!', 'Etkinliğe katılamadınız');
   }
 };
 
@@ -197,7 +199,7 @@ export const cancelGoingToEvent = event => async (
     toastr.success('Başarılı', 'Etkinlikten ayrıldınız ');
   } catch (error) {
     console.log(error);
-    toastr.error('Hata', 'Etkinlikten ayrılamadınız');
+    // toastr.error('Hata', 'Etkinlikten ayrılamadınız');
   }
 };
 
