@@ -9,7 +9,6 @@ import EventList from './EventList';
 import EventActivity from './EventActivity';
 import { getEventsForDashboard } from '../eventActions';
 import { openModal } from '../../modals/modalActions';
-import { closeSidebar } from '../../nav/sidebarActions';
 
 const query = [
   {
@@ -28,8 +27,7 @@ const mapState = state => ({
 
 const actions = {
   getEventsForDashboard,
-  openModal,
-  closeSidebar
+  openModal
 };
 
 class EventsPage extends Component {
@@ -41,7 +39,6 @@ class EventsPage extends Component {
   };
 
   async componentDidMount() {
-    this.props.closeSidebar();
     let next = await this.props.getEventsForDashboard();
     if (next && next.docs && next.docs.length > 1) {
       this.setState({

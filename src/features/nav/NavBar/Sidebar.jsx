@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Sidebar, Menu, Icon, Image, Dimmer, Divider } from 'semantic-ui-react';
+import { Sidebar, Menu, Image, Dimmer } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -40,19 +40,27 @@ export class SidebarNav extends Component {
           vertical
           visible={visible}
           width="thin"
-          style={{ backgroundColor: '#54a0ff' }}
+          style={{ backgroundColor: '#1B9CFC' }}
         >
           <Menu.Item>
-            <Link to="/places">Kamp Yerleri</Link>
+            <Link to="/places" onClick={closeSidebar}>
+              Kamp Yerleri
+            </Link>
           </Menu.Item>
           <Menu.Item>
-            <Link to="/events">Kamp Tarihleri</Link>
+            <Link to="/events" onClick={closeSidebar}>
+              Kamp Tarihleri
+            </Link>
           </Menu.Item>
           <Menu.Item>
-            <Link to="/people">Arkadaşlarım</Link>
+            <Link to="/people" onClick={closeSidebar}>
+              Arkadaşlarım
+            </Link>
           </Menu.Item>
           <Menu.Item>
-            <Link to="/about">Hakkımızda</Link>
+            <Link to="/about" onClick={closeSidebar}>
+              Hakkımızda
+            </Link>
           </Menu.Item>
           {authenticated && (
             <hr style={{ backgroundColor: 'white', margin: 0 }} />
@@ -69,12 +77,16 @@ export class SidebarNav extends Component {
           )}
           {authenticated && (
             <Menu.Item>
-              <Link to={`/profile/${auth.uid}`}>Profilim</Link>
+              <Link to={`/profile/${auth.uid}`} onClick={closeSidebar}>
+                Profilim
+              </Link>
             </Menu.Item>
           )}
           {authenticated && (
             <Menu.Item>
-              <Link to="/settings">Ayarlarım</Link>
+              <Link to="/settings" onClick={closeSidebar}>
+                Ayarlarım
+              </Link>
             </Menu.Item>
           )}
         </Sidebar>

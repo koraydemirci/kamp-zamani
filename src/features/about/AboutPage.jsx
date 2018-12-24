@@ -1,17 +1,9 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { Grid, Segment, Image, Header, Icon } from 'semantic-ui-react';
 
 import AboutPageForm from './AboutPageForm';
-import { closeSidebar } from '../nav/sidebarActions';
-
-const actions = { closeSidebar };
 
 class AboutPage extends Component {
-  componentDidMount() {
-    this.props.closeSidebar();
-  }
-
   render() {
     return (
       <Grid padded>
@@ -20,7 +12,7 @@ class AboutPage extends Component {
           <Segment>
             <p>
               Türkiye’de kamp ve doğa sporları yapılabilecek tüm yerleri güncel
-              şekilde doğa severlerle paylaşıyoruzç Bçylece doğa severlere yeni
+              şekilde doğa severlerle paylaşıyoruz. Böylece doğa severlere yeni
               yerler keşfetmelerinde, etkinlikler düzenlemelerinde ve birbirleri
               ile tanışmalarında yardımcı oluyoruz.
             </p>
@@ -50,7 +42,4 @@ class AboutPage extends Component {
   }
 }
 
-export default connect(
-  null,
-  actions
-)(AboutPage);
+export default AboutPage;

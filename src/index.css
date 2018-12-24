@@ -40,6 +40,10 @@ body {
   z-index: 5;
 }
 
+.text-container h2 {
+  margin-top: 35vh !important;
+}
+
 .videoContainer .overlay {
   height: 100%;
   width: 100%;
@@ -80,7 +84,7 @@ body {
 }
 
 .ui.fixed.menu {
-  background: #54a0ff !important;
+  background: #1b9cfc !important;
 }
 
 .ui.main.container,

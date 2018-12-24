@@ -114,8 +114,7 @@ class ChangePhotos extends Component {
       <Segment>
         <Header color="teal" dividing size="large" content="Profil Resmi" />
         <Grid stackable>
-          <Grid.Row />
-          <Grid.Column width={5}>
+          <Grid.Column width={8}>
             <Header size="small" content="1 - Resim ekle" />
             <Dropzone onDrop={this.onDrop} multiple={false}>
               <div style={{ padding: '20px', textAlign: 'center' }}>
@@ -125,7 +124,7 @@ class ChangePhotos extends Component {
             </Dropzone>
           </Grid.Column>
 
-          <Grid.Column width={5}>
+          <Grid.Column width={8}>
             <Header size="small" content="2 - Resmi Boyutlandır" />
             {this.state.files[0] && (
               <Cropper
@@ -144,7 +143,7 @@ class ChangePhotos extends Component {
             )}
           </Grid.Column>
 
-          <Grid.Column width={6}>
+          <Grid.Column width={8}>
             <Header size="small" content="3 - Resmi Yükle" />
             {this.state.files[0] && (
               <div>

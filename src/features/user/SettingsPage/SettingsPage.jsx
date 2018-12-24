@@ -1,20 +1,12 @@
 import React, { Component } from 'react';
 import { Grid } from 'semantic-ui-react';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
 
 import ProfileSettingsPage from './ProfileSettingsPage';
 import AccountSettingsPage from './AccountSettingsPage/AccountSettingsPage';
 import SettingsNav from './SettingsNav';
-import { closeSidebar } from '../../nav/sidebarActions';
-
-const actions = { closeSidebar };
 
 class SettingsPage extends Component {
-  componentDidMount() {
-    this.props.closeSidebar();
-  }
-
   render() {
     return (
       <Grid stackable reversed="mobile">
@@ -39,7 +31,4 @@ class SettingsPage extends Component {
   }
 }
 
-export default connect(
-  null,
-  actions
-)(SettingsPage);
+export default SettingsPage;

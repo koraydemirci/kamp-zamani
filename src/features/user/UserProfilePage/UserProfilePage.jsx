@@ -12,7 +12,6 @@ import UserProfileEvents from './UserProfileEvents';
 import { userDetailedQuery } from '../userQueries';
 import { getUserEvents, followUser, unfollowUser } from '../UserActions';
 import LoadingComponent from '../../../app/layout/LoadingComponent';
-import { closeSidebar } from '../../nav/sidebarActions';
 
 const mapState = (state, ownProps) => {
   let profile = {};
@@ -41,13 +40,11 @@ const mapState = (state, ownProps) => {
 const actions = {
   getUserEvents,
   followUser,
-  unfollowUser,
-  closeSidebar
+  unfollowUser
 };
 
 class UserProfilePage extends Component {
   async componentDidMount() {
-    this.props.closeSidebar();
     let user = await this.props.firestore.get(
       `users/${this.props.match.params.id}`
     );

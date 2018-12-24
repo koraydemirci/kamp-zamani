@@ -5,7 +5,6 @@ import { compose } from 'redux';
 import { firestoreConnect } from 'react-redux-firebase';
 
 import PersonCard from './PersonCard';
-import { closeSidebar } from '../../nav/sidebarActions';
 
 const query = ({ auth }) => {
   return [
@@ -30,13 +29,7 @@ const mapState = state => ({
   auth: state.firebase.auth
 });
 
-const actions = { closeSidebar };
-
 class PeoplePage extends Component {
-  componentDidMount() {
-    this.props.closeSidebar();
-  }
-
   render() {
     const { followings, followers } = this.props;
 
@@ -74,9 +67,6 @@ class PeoplePage extends Component {
 }
 
 export default compose(
-  connect(
-    mapState,
-    actions
-  ),
+  connect(mapState),
   firestoreConnect(props => query(props))
 )(PeoplePage);

@@ -52,7 +52,6 @@ const ChangePassword = ({
         <Header color="teal" dividing size="large" content="Şifre Değiştirme" />
         <Form onSubmit={handleSubmit(updatePassword)}>
           <Field
-            width={8}
             name="oldPassword"
             type="password"
             pointing="left"
@@ -62,7 +61,6 @@ const ChangePassword = ({
             placeholder="Şu Anki Şifre"
           />
           <Field
-            width={8}
             name="newPassword1"
             type="password"
             pointing="left"
@@ -72,7 +70,6 @@ const ChangePassword = ({
             placeholder="Yeni Şifre"
           />
           <Field
-            width={8}
             name="newPassword2"
             type="password"
             inline={true}

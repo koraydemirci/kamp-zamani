@@ -1,13 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Responsive,
-  Grid,
-  Segment,
-  Button,
-  Form,
-  Header
-} from 'semantic-ui-react';
+import { Grid, Segment, Button, Form } from 'semantic-ui-react';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -19,7 +12,6 @@ import LoadingComponent from '../../../app/layout/LoadingComponent';
 import PlaceCard from './PlaceCard';
 import { cities } from '../../../app/common/util/optionsList';
 import { openModal } from '../../modals/modalActions';
-import { closeSidebar } from '../../nav/sidebarActions';
 
 const mapState = ({ places, form, async, firebase }) => ({
   places: places,
@@ -29,11 +21,10 @@ const mapState = ({ places, form, async, firebase }) => ({
   loading: async.loading
 });
 
-const actions = { getPlaces, openModal, closeSidebar };
+const actions = { getPlaces, openModal };
 
 class PlacesPage extends Component {
   async componentDidMount() {
-    this.props.closeSidebar();
     await this.props.getPlaces();
   }
 
