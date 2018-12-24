@@ -36,7 +36,7 @@ class EventChatForm extends Component {
             labelPosition="left"
             icon="edit"
             primary
-            onClick={() => openModal('LoginModal')}
+            onClick={() => openModal('UnauthModal')}
           />
         )}
       </Form>

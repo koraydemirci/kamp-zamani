@@ -25,16 +25,22 @@ class AboutPage extends Component {
           </Segment>
 
           <Segment>
-            <span>
-              Developed by{' '}
-              <a href="https://koraydemirci.github.io">Koray Demirci</a>
-            </span>
-            <a href="https://github.com/koraydemirci">
-              <Icon name="github" size="large" style={{ float: 'right' }} />
-            </a>
-            <a href="https://www.linkedin.com/in/koray-demirci-6291917a/">
-              <Icon name="linkedin" size="large" style={{ float: 'right' }} />
-            </a>
+            <Grid stackable>
+              <Grid.Column width={10}>
+                <span>
+                  Developed by{' '}
+                  <a href="https://koraydemirci.github.io">Koray Demirci</a>
+                </span>
+              </Grid.Column>
+              <Grid.Column width={6}>
+                <a href="https://github.com/koraydemirci">
+                  <Icon name="github" size="large" />
+                </a>
+                <a href="https://www.linkedin.com/in/koray-demirci-6291917a/">
+                  <Icon name="linkedin" size="large" />
+                </a>
+              </Grid.Column>
+            </Grid>
           </Segment>
         </Grid.Column>
       </Grid>

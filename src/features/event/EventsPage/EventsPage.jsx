@@ -82,7 +82,7 @@ class EventsPage extends Component {
     const authenticated = auth.isLoaded && !auth.isEmpty;
 
     if (loadedEvents.length === 0 && loadingInitial)
-      return <LoadingComponent inverted={true} />;
+      return <LoadingComponent />;
 
     return (
       <Grid stackable>

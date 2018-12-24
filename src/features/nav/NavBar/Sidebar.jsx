@@ -40,7 +40,7 @@ export class SidebarNav extends Component {
           vertical
           visible={visible}
           width="thin"
-          style={{ backgroundColor: '#1B9CFC' }}
+          style={{ backgroundColor: '#0097e6' }}
         >
           <Menu.Item>
             <Link to="/places" onClick={closeSidebar}>

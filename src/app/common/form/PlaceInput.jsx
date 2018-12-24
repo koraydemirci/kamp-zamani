@@ -26,8 +26,9 @@ class PlaceInput extends Component {
           {...input}
           disabled={disabled}
           onPlaceSelected={onSelect}
-          {...options}
+          types={null}
           placeholder={placeholder}
+          options={options}
         />
 
         {touched && error && (

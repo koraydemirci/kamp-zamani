@@ -168,7 +168,7 @@ export const citiesWithoutHepsiOption = [
 ];
 
 export const interests = [
-  { key: 'atv', text: 'ATV', value: 'atv' },
+  { key: 'atv', text: 'ATV', value: 'ATV' },
   { key: 'dagYuruyusu', text: 'Dağ Yürüyüşü', value: 'Dağ Yürüyüşü' },
   { key: 'kanyonGecisi', text: 'Kanyon Geçisi', value: 'Kanyon Geçisi' },
   { key: 'kampcilik', text: 'Kampçılık', value: 'Kampçılık' },

@@ -36,7 +36,7 @@ class PlacesPage extends Component {
     const { handleSubmit, loading, places, auth, openModal } = this.props;
     const authenticated = auth.isLoaded && !auth.isEmpty;
 
-    if (loading) return <LoadingComponent inverted={true} />;
+    if (loading) return <LoadingComponent />;
     return (
       <Grid stackable reversed="mobile">
         <Grid.Column width={10}>
@@ -69,7 +69,6 @@ class PlacesPage extends Component {
                 component={SelectInput}
                 options={cities}
                 value="cities"
-                placeholder="Şehirler"
               />
               <Button basic fluid size="large" positive content="Ara" />
             </Form>

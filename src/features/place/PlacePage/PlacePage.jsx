@@ -81,8 +81,7 @@ class SitePage extends Component {
     const authenticated = auth.isLoaded && !auth.isEmpty;
     const loadingPlace = requesting[`places/${match.params.id}`];
 
-    if (loadingPlace || this.state.initialLoading)
-      return <LoadingComponent inverted={true} />;
+    if (loadingPlace || this.state.initialLoading) return <LoadingComponent />;
 
     return (
       <Grid stackable reversed="mobile">

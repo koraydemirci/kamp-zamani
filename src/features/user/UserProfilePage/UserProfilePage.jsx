@@ -76,7 +76,7 @@ class UserProfilePage extends Component {
     const isFollowing = !isEmpty(following);
 
     return loading ? (
-      <LoadingComponent inverted={true} />
+      <LoadingComponent />
     ) : (
       <Grid stackable reversed="mobile">
         <Grid.Column width={12}>

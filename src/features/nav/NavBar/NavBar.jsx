@@ -38,7 +38,7 @@ class NavBar extends Component {
     const authenticated = auth.isLoaded && !auth.isEmpty;
 
     return (
-      <Menu inverted fixed="top">
+      <Menu borderless inverted fixed="top">
         <Responsive as={Container} minWidth={992}>
           <Menu.Item as={NavLink} to="/about">
             <img src="/assets/logo.png" alt="logo" />

@@ -2,88 +2,157 @@ import React, { Component } from 'react';
 import { Container } from 'semantic-ui-react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import ReduxToastr from 'react-redux-toastr';
+import Loadable from 'react-loadable';
 
-import AboutPage from '../../features/about/AboutPage';
-import HomePage from '../../features/home/HomePage';
-import NavBar from '../../features/nav/NavBar/NavBar';
-import PlaceForm from '../../features/place/PlaceForm/PlaceForm';
-import PlacePage from '../../features/place/PlacePage/PlacePage';
-import PlacesPage from '../../features/place/PlacesPage/PlacesPage';
-import EventForm from '../../features/event/EventForm/EventForm';
-import EventPage from '../../features/event/EventPage/EventPage';
-import EventsPage from '../../features/event/EventsPage/EventsPage';
-import PeoplePage from '../../features/user/PeoplePage/PeoplePage';
-import SettingsPage from '../../features/user/SettingsPage/SettingsPage';
-import UserProfilePage from '../../features/user/UserProfilePage/UserProfilePage';
-import ModalManager from '../../features/modals/ModalManager';
+import LoadingComponent from '../../app/layout/LoadingComponent';
 import ScrollToTop from '../common/util/ScrollToTop';
-import 'react-redux-toastr/lib/css/react-redux-toastr.min.css';
 import { UserIsAuthenticated } from '../../features/auth/authWrapper';
-import NotFound from './NotFound';
-import ResetPasswordPage from '../../features/auth/ResetPasswordPage/ResetpasswordPage';
-import EventFormFromPlace from '../../features/event/EventForm/EventFormFromPlace';
-import Sidebar from '../../features/nav/NavBar/Sidebar';
+
+import 'react-redux-toastr/lib/css/react-redux-toastr.min.css';
+
+const AsyncHomePage = Loadable({
+  loader: () => import('../../features/home/HomePage'),
+  loading: LoadingComponent
+});
+const AsyncEventsPage = Loadable({
+  loader: () => import('../../features/event/EventsPage/EventsPage'),
+  loading: LoadingComponent
+});
+const AsyncNavBar = Loadable({
+  loader: () => import('../../features/nav/NavBar/NavBar'),
+  loading: LoadingComponent
+});
+const AsyncEventForm = Loadable({
+  loader: () => import('../../features/event/EventForm/EventForm'),
+  loading: LoadingComponent
+});
+const AsyncSettingsPage = Loadable({
+  loader: () => import('../../features/user/SettingsPage/SettingsPage'),
+  loading: LoadingComponent
+});
+const AsyncUserProfilePage = Loadable({
+  loader: () => import('../../features/user/UserProfilePage/UserProfilePage'),
+  loading: LoadingComponent
+});
+const AsyncPeoplePage = Loadable({
+  loader: () => import('../../features/user/PeoplePage/PeoplePage'),
+  loading: LoadingComponent
+});
+const AsyncEventPage = Loadable({
+  loader: () => import('../../features/event/EventPage/EventPage'),
+  loading: LoadingComponent
+});
+const AsyncModalManager = Loadable({
+  loader: () => import('../../features/modals/ModalManager'),
+  loading: LoadingComponent
+});
+
+const AsyncSidebar = Loadable({
+  loader: () => import('../../features/nav/NavBar/Sidebar'),
+  loading: LoadingComponent
+});
+
+const AsyncEventFormFromPlace = Loadable({
+  loader: () => import('../../features/event/EventForm/EventFormFromPlace'),
+  loading: LoadingComponent
+});
+
+const AsyncResetPasswordPage = Loadable({
+  loader: () =>
+    import('../../features/auth/ResetPasswordPage/ResetPasswordPage'),
+  loading: LoadingComponent
+});
+
+const AsyncAboutPage = Loadable({
+  loader: () => import('../../features/about/AboutPage'),
+  loading: LoadingComponent
+});
+const AsyncPlaceForm = Loadable({
+  loader: () => import('../../features/place/PlaceForm/PlaceForm'),
+  loading: LoadingComponent
+});
+
+const AsyncPlacePage = Loadable({
+  loader: () => import('../../features/place/PlacePage/PlacePage'),
+  loading: LoadingComponent
+});
+
+const AsyncPlacesPage = Loadable({
+  loader: () => import('../../features/place/PlacesPage/PlacesPage'),
+  loading: LoadingComponent
+});
+
+const AsyncNotFound = Loadable({
+  loader: () => import('./NotFound'),
+  loading: LoadingComponent
+});
 
 class App extends Component {
   render() {
     return (
       <BrowserRouter>
         <ScrollToTop>
-          <ModalManager />
-          <ReduxToastr position="bottom-right" />
+          <AsyncModalManager />
+          <ReduxToastr
+            position="bottom-right"
+            onfirmOptions={{
+              okText: 'Devam',
+              cancelText: 'İptal'
+            }}
+          />
           <Switch>
-            <Route exact path="/" component={HomePage} />
+            <Route exact path="/" component={AsyncHomePage} />
             <Route
               path="/(.+)"
               render={() => (
                 <div>
-                  <Sidebar />
-                  <NavBar />
+                  <AsyncSidebar />
+                  <AsyncNavBar />
                   <Container className="main">
                     <Switch>
-                      <Route path="/about" component={AboutPage} />
+                      <Route path="/about" component={AsyncAboutPage} />
                       <Route
                         path="/createPlace"
-                        component={UserIsAuthenticated(PlaceForm)}
+                        component={UserIsAuthenticated(AsyncPlaceForm)}
                       />
                       <Route
                         path="/editPlace/:id"
-                        component={UserIsAuthenticated(PlaceForm)}
+                        component={UserIsAuthenticated(AsyncPlaceForm)}
                       />
-                      <Route path="/places/:id" component={PlacePage} />
-                      <Route path="/places" component={PlacesPage} />
+                      <Route path="/places/:id" component={AsyncPlacePage} />
+                      <Route path="/places" component={AsyncPlacesPage} />
                       <Route
                         path="/createEvent"
-                        component={UserIsAuthenticated(EventForm)}
+                        component={UserIsAuthenticated(AsyncEventForm)}
                       />
                       <Route
                         path="/createEventfromPlace/:id"
-                        component={EventFormFromPlace}
+                        component={AsyncEventFormFromPlace}
                       />
                       <Route
                         path="/manageEvent/:id"
-                        component={UserIsAuthenticated(EventForm)}
+                        component={UserIsAuthenticated(AsyncEventForm)}
                       />
-                      <Route path="/events/:id" component={EventPage} />
-                      <Route path="/events" component={EventsPage} />
+                      <Route path="/events/:id" component={AsyncEventPage} />
+                      <Route path="/events" component={AsyncEventsPage} />
                       <Route
                         path="/people"
-                        component={UserIsAuthenticated(PeoplePage)}
+                        component={UserIsAuthenticated(AsyncPeoplePage)}
                       />
                       <Route
                         path="/profile/:id"
-                        component={UserIsAuthenticated(UserProfilePage)}
+                        component={UserIsAuthenticated(AsyncUserProfilePage)}
                       />
                       <Route
                         path="/settings"
-                        component={UserIsAuthenticated(SettingsPage)}
+                        component={UserIsAuthenticated(AsyncSettingsPage)}
                       />
                       <Route
                         path="/resetPassword"
-                        component={ResetPasswordPage}
+                        component={AsyncResetPasswordPage}
                       />
-                      <Route path="/error" component={NotFound} />
-                      <Route component={NotFound} />
+                      <Route path="/error" component={AsyncNotFound} />
+                      <Route component={AsyncNotFound} />
                     </Switch>
                   </Container>
                 </div>

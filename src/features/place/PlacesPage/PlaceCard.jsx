@@ -15,7 +15,9 @@ const PlaceCard = ({ id, photoURL, title, city }) => {
 
       <Card.Content>
         <Card.Header>{title}</Card.Header>
-        <Card.Description as="h5">Şehir: {city}</Card.Description>
+        <Card.Description as="h5">
+          <b>Şehir:</b> {city}
+        </Card.Description>
       </Card.Content>
       <Card.Content extra>
         <Button

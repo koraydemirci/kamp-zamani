@@ -101,8 +101,7 @@ class EventPage extends Component {
     const authenticated = auth.isLoaded && !auth.isEmpty;
     const loadingEvent = requesting[`events/${match.params.id}`];
 
-    if (loadingEvent || this.state.initialLoading)
-      return <LoadingComponent inverted={true} />;
+    if (loadingEvent || this.state.initialLoading) return <LoadingComponent />;
 
     return (
       <Grid stackable>

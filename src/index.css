@@ -2,15 +2,31 @@ html {
   font-size: 100%;
 }
 
-p {
-  font-size: 1rem !important;
-}
-
-#root .ui {
+p,
+button,
+a,
+span,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+input,
+form,
+textarea,
+select,
+option,
+label,
+field,
+nav,
+ul,
+ol,
+header,
+main,
+section {
   font-family: 'Roboto', sans-serif !important;
-}
-
-#root .ui .button {
   font-weight: 400 !important;
 }
 
@@ -55,18 +71,6 @@ body {
   opacity: 0.1;
 }
 
-.masthead .ui.menu .ui.button,
-.ui.menu a.ui.inverted.button {
-  margin-left: 0.5em;
-}
-
-.masthead h1.ui.header {
-  margin-top: 3em;
-  margin-bottom: 0;
-  font-size: 4em;
-  font-weight: normal;
-}
-
 .masthead h2 {
   margin-top: 6em;
   margin-bottom: 1em;
@@ -79,12 +83,9 @@ body {
 }
 
 /* navbar styles */
-.ui.menu .item img.logo {
-  margin-right: 1.5em;
-}
 
 .ui.fixed.menu {
-  background: #1b9cfc !important;
+  background: #0097e6 !important;
 }
 
 .ui.main.container,
@@ -94,11 +95,6 @@ body {
 
 .ui.center.aligned.segment.attendance-preview {
   background-color: #f5f5f5;
-}
-
-.masthead .ui.menu .ui.button,
-.ui.menu a.ui.inverted.button {
-  margin-left: 0.5em;
 }
 
 .ui.menu .item > img:not(.ui) {

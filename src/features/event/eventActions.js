@@ -90,13 +90,15 @@ export const cancelToggle = (cancelled, eventId) => async (
 ) => {
   const firestore = getFirestore();
   const message = cancelled
-    ? 'Etkinlik iptal edildi'
-    : 'Etkinlik aktive edildi';
+    ? 'Etkinliği iptal etmek istediğinizden emin misiniz?'
+    : 'Etkinliği tekrar aktif yapmak istediğinizden emin misiniz?';
   try {
-    firestore.update(`events/${eventId}`, {
-      cancelled: cancelled
+    toastr.confirm(message, {
+      onOk: () =>
+        firestore.update(`events/${eventId}`, {
+          cancelled: cancelled
+        })
     });
-    toastr.success('Başarılı', message);
   } catch (error) {
     console.log(error);
     // toastr.error('Hata!', 'Etkinlik güncellenemedi');
