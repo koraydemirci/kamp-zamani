@@ -17,9 +17,6 @@ const UserProfileHeader = ({
             <Header color="teal" as="h2">
               {displayName}
             </Header>
-            <p style={{ marginBottom: 0 }}>
-              {occupation || 'Mesleği bilinmiyor'}
-            </p>
             <p>{city || 'Yaşadığı yer bilinmiyor'}</p>
           </Item.Content>
         </Item>

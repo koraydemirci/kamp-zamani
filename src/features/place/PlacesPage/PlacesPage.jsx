@@ -69,6 +69,7 @@ class PlacesPage extends Component {
                 component={SelectInput}
                 options={cities}
                 value="cities"
+                placeholder="Şehirler"
               />
               <Button basic fluid size="large" positive content="Ara" />
             </Form>
