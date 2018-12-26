@@ -2,11 +2,16 @@ import React from 'react';
 import { Form, Segment, Button, Label } from 'semantic-ui-react';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
+import { combineValidators, isRequired } from 'revalidate';
 
 import TextInput from '../../../app/common/form/TextInput';
 import { resetPasswordByEmail } from '../authActions';
 
 const actions = { resetPasswordByEmail };
+
+const validate = combineValidators({
+  email: isRequired({ message: 'Lütfen email adresini giriniz' })
+});
 
 const ResetPasswordForm = ({ handleSubmit, error, resetPasswordByEmail }) => {
   return (
@@ -35,4 +40,4 @@ const ResetPasswordForm = ({ handleSubmit, error, resetPasswordByEmail }) => {
 export default connect(
   null,
   actions
-)(reduxForm({ form: 'resetPasswordForm' })(ResetPasswordForm));
+)(reduxForm({ form: 'resetPasswordForm', validate })(ResetPasswordForm));
