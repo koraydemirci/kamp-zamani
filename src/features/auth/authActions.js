@@ -111,7 +111,7 @@ export const resetPasswordByEmail = value => async (
     dispatch(closeModal());
   } catch (error) {
     throw new SubmissionError({
-      _error: 'Şifreniz değiştirilirken hata oluştu'
+      _error: 'Şifreniz sıfırlanırken hata oluştu'
     });
   }
 };

@@ -7,7 +7,7 @@ const PlaceCard = ({ id, photoURL, title, city }) => {
   return (
     <Card fluid>
       <LazyLoad
-        height="100%"
+        height={700}
         placeholder={<Image src="/assets/placeholder-image.png" />}
       >
         <Image src={photoURL || `/assets/placeholder-image.png`} />

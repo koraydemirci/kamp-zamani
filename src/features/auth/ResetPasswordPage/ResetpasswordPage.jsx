@@ -14,17 +14,26 @@ import {
   combineValidators,
   matchesField,
   isRequired,
-  composeValidators
+  composeValidators,
+  hasLengthGreaterThan
 } from 'revalidate';
 
 import TextInput from '../../../app/common/form/TextInput';
 import { updatePassword } from '../authActions';
 
 const validate = combineValidators({
-  newPassword1: isRequired({ message: 'Please enter a password' }),
+  newPassword1: composeValidators(
+    isRequired({ message: 'Lütfen yeni şifrenizi giriniz' }),
+    hasLengthGreaterThan(5)({
+      message: 'Yeni şifreniz en az 6 karakter olmalı'
+    })
+  )(),
   newPassword2: composeValidators(
-    isRequired({ message: 'Please confirm your new password' }),
-    matchesField('newPassword1')({ message: 'Passwords do not match' })
+    isRequired({ message: 'Lütfen yeni şifrenizi tekrar giriniz' }),
+    hasLengthGreaterThan(5)({
+      message: 'Yeni şifreniz en az 6 karakter olmalı'
+    }),
+    matchesField('newPassword1')({ message: 'Yeni şifreler aynı değil' })
   )()
 });
 
@@ -87,4 +96,4 @@ const ResetPasswordPage = ({
 export default connect(
   null,
   actions
-)(reduxForm({ form: 'account', validate })(ResetPasswordPage));
+)(reduxForm({ form: 'reset', validate })(ResetPasswordPage));

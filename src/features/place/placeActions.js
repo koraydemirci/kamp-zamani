@@ -81,7 +81,6 @@ export const addPlaceComment = (placeId, values, parentId) => async (
   getState,
   { getFirebase }
 ) => {
-  console.log('comment2');
   const firebase = getFirebase();
   const profile = getState().firebase.profile;
   const user = firebase.auth().currentUser;
