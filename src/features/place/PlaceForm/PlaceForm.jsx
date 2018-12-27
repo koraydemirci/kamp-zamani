@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { reduxForm, Field } from 'redux-form';
+import { reduxForm, Field, SubmissionError } from 'redux-form';
 import { connect } from 'react-redux';
 import { withFirestore } from 'react-redux-firebase';
 import {
@@ -9,7 +9,8 @@ import {
   Grid,
   Header,
   Image,
-  Icon
+  Icon,
+  Label
 } from 'semantic-ui-react';
 import {
   composeValidators,
@@ -102,9 +103,30 @@ class placeForm extends Component {
   };
 
   onFormSubmit = async values => {
+    if (Object.keys(this.state.cityLatLng).length === 0) {
+      throw new SubmissionError({
+        _error:
+          'Lütfen GOOGLE tarafından sunulan seçenekler arasından yer seçimi yapın'
+      });
+    }
+
+    if (Object.keys(this.state.markerLocation).length === 0) {
+      throw new SubmissionError({
+        _error:
+          'Lütfen GOOGLE tarafından sunulan haritaya konum iğnesini yerleştirin'
+      });
+    }
+
+    if (Object.keys(this.state.image).length === 0) {
+      throw new SubmissionError({
+        _error: 'Lütfen resim yükleyin'
+      });
+    }
+
     if (Object.keys(this.state.markerLocation).length !== 0)
       values.markerLocation = this.state.markerLocation;
     values.location = this.state.location;
+
     if (this.props.initialValues && this.props.initialValues.id) {
       await this.props.updatePlace(values);
       this.props.history.goBack();
@@ -144,7 +166,7 @@ class placeForm extends Component {
   };
 
   render() {
-    const { loading, history, handleSubmit } = this.props;
+    const { loading, history, handleSubmit, error } = this.props;
     const { cityLatLng } = this.state;
 
     return (
@@ -247,8 +269,14 @@ class placeForm extends Component {
                     </div>
                   )}
                 </Grid.Column>
+                <Grid.Column width={8}>
+                  {error && (
+                    <Label basic color="red" style={{ marginBottom: 10 }}>
+                      {error}
+                    </Label>
+                  )}
+                </Grid.Column>
               </Grid>
-
               <Button loading={loading} positive type="submit">
                 Gönder
               </Button>

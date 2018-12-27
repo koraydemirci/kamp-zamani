@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { reduxForm, Field } from 'redux-form';
+import { reduxForm, Field, SubmissionError } from 'redux-form';
 import { connect } from 'react-redux';
 import { withFirestore } from 'react-redux-firebase';
-import { Segment, Form, Button, Grid, Header } from 'semantic-ui-react';
+import { Segment, Form, Button, Grid, Header, Label } from 'semantic-ui-react';
 import {
   composeValidators,
   combineValidators,
@@ -96,9 +96,24 @@ class EventForm extends Component {
   };
 
   onFormSubmit = async values => {
+    if (Object.keys(this.state.cityLatLng).length === 0) {
+      throw new SubmissionError({
+        _error:
+          'Lütfen GOOGLE tarafından sunulan seçenekler arasından yer seçimi yapın'
+      });
+    }
+
+    if (Object.keys(this.state.markerLocation).length === 0) {
+      throw new SubmissionError({
+        _error:
+          'Lütfen GOOGLE tarafından sunulan haritaya konum iğnesini yerleştirin'
+      });
+    }
+
     if (Object.keys(this.state.markerLocation).length !== 0)
       values.markerLocation = this.state.markerLocation;
     values.location = this.state.location;
+
     if (this.props.initialValues && this.props.initialValues.id) {
       await this.props.updateEvent(values);
       this.props.history.goBack();
@@ -109,7 +124,14 @@ class EventForm extends Component {
   };
 
   render() {
-    const { loading, history, handleSubmit, event, cancelToggle } = this.props;
+    const {
+      loading,
+      history,
+      handleSubmit,
+      event,
+      cancelToggle,
+      error
+    } = this.props;
     const { cityLatLng, selectedDay } = this.state;
 
     return (
@@ -172,6 +194,13 @@ class EventForm extends Component {
                 onDateClick={this.handleDayClick}
                 selectedDay={selectedDay}
               />
+              {error && (
+                <div>
+                  <Label basic color="red" style={{ marginBottom: 10 }}>
+                    {error}
+                  </Label>
+                </div>
+              )}
               <Button loading={loading} positive type="submit">
                 Gönder
               </Button>
