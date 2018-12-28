@@ -1,5 +1,5 @@
 export const cities = [
-  { key: 'Hepsi', text: 'HEPSİ', value: 'Hepsi' },
+  { key: 'Hepsi', text: 'Tüm Şehirler', value: 'Hepsi' },
   { key: 'Adana', text: 'Adana', value: 'Adana' },
   { key: 'Adıyaman', text: 'Adıyaman', value: 'Adıyaman' },
   { key: 'Afyonkarahisar', text: 'Afyonkarahisar', value: 'Afyonkarahisar' },

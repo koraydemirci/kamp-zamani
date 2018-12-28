@@ -165,6 +165,7 @@ class EventForm extends Component {
                 component={SelectInput}
                 options={citiesWithoutHepsiOption}
                 value="citiesWithoutHepsiOption"
+                placeholder="Adana"
               />
 
               <Field
