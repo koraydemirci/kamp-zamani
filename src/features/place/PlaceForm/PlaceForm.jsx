@@ -117,7 +117,7 @@ class placeForm extends Component {
       });
     }
 
-    if (Object.keys(this.state.image).length === 0) {
+    if (!this.state.image.size) {
       throw new SubmissionError({
         _error: 'Lütfen resim yükleyin'
       });
