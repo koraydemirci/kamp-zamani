@@ -2,6 +2,10 @@ html {
   font-size: 100%;
 }
 
+*,
+html,
+body,
+footer,
 p,
 button,
 a,
@@ -19,7 +23,7 @@ textarea,
 select,
 option,
 label,
-field,
+div,
 nav,
 ul,
 ol,

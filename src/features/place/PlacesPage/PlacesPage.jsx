@@ -69,7 +69,7 @@ class PlacesPage extends Component {
                 component={SelectInput}
                 options={cities}
                 value="cities"
-                placeholder="Şehirler"
+                placeholder="Tüm Şehirler"
               />
               <Button basic fluid size="large" positive content="Ara" />
             </Form>
