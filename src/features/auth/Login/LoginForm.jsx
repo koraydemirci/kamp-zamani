@@ -16,8 +16,8 @@ const actions = {
 };
 
 const validate = combineValidators({
-  email: isRequired('email'),
-  password: isRequired('password')
+  email: isRequired({ message: 'Lütfen email adresinizi girin' }),
+  password: isRequired({ message: 'Lütfen şifrenizi girin' })
 });
 
 const LoginForm = ({
