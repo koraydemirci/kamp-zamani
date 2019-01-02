@@ -8,7 +8,16 @@ class AboutPage extends Component {
     return (
       <Grid padded>
         <Grid.Column>
-          <Image src={'/assets/event-detail-page.jpg'} bordered />
+          <Image
+            src={'/assets/event-detail-page.jpg'}
+            style={{
+              width: '100%',
+              height: '50vh',
+              objectFit: 'cover',
+              objectPosition: '0 90%'
+            }}
+            bordered
+          />
           <Segment>
             <p>
               Türkiye’de kamp ve doğa sporları yapılabilecek tüm yerleri güncel
