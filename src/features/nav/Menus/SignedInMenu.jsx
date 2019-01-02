@@ -4,7 +4,13 @@ import { Link } from 'react-router-dom';
 
 const SignedInMenu = ({ profile, auth, signOut }) => (
   <Menu.Item position="right">
-    <Image avatar spaced="right" src={profile.photoURL || '/assets/user.png'} />
+    <Image
+      as="img"
+      alt="profile photo"
+      avatar
+      spaced="right"
+      src={profile.photoURL || '/assets/user.png'}
+    />
     <Dropdown pointing="top left" text={profile.displayName}>
       <Dropdown.Menu>
         <Dropdown.Item

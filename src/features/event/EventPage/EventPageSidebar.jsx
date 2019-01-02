@@ -29,7 +29,13 @@ const EventPageSidebar = ({ attendees }) => {
                     Düzenleyen
                   </Label>
                 )}
-                <Image circular size="mini" src={attendee.photoURL} />
+                <Image
+                  as="img"
+                  alt="event attendee photo"
+                  circular
+                  size="mini"
+                  src={attendee.photoURL}
+                />
                 <Item.Content verticalAlign="middle" style={{ marginTop: 5 }}>
                   <Item.Header as="h5">
                     <Link to={`/profile/${attendee.userUid}`}>

@@ -68,6 +68,8 @@ export class SidebarNav extends Component {
           {authenticated && (
             <Menu.Item>
               <Image
+                as="img"
+                alt="profile photo"
                 src={profile.photoURL || '/assets/user.png'}
                 avatar
                 style={{ marginBottom: 10 }}

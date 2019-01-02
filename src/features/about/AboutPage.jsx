@@ -6,9 +6,11 @@ import AboutPageForm from './AboutPageForm';
 class AboutPage extends Component {
   render() {
     return (
-      <Grid padded>
+      <Grid>
         <Grid.Column>
           <Image
+            as="img"
+            alt="camping site"
             src={'/assets/event-detail-page.jpg'}
             style={{
               width: '100%',

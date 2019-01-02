@@ -10,7 +10,12 @@ const placePageHeader = ({
   return (
     <Segment.Group>
       <Segment basic attached="top" style={{ padding: '0' }}>
-        <Image src={photoURL || `/assets/event-detail-page.jpg`} fluid />
+        <Image
+          as="img"
+          alt="camping site"
+          src={photoURL || `/assets/event-detail-page.jpg`}
+          fluid
+        />
       </Segment>
       <Segment>
         <Header size="large" content={title} color="teal" />

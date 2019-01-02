@@ -14,7 +14,7 @@ const UserProfilePhotos = ({ photos }) => {
               height={150}
               placeholder={<Image src="/assets/user.png" />}
             >
-              <Image src={photo.url} />
+              <Image as="img" alt="profile photo" src={photo.url} />
             </LazyLoad>
           ))}
       </Image.Group>

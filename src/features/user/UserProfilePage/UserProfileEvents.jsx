@@ -26,7 +26,11 @@ const UserProfileEvents = ({ events, eventsLoading, changeTab }) => {
           {events &&
             events.map(event => (
               <Card as={Link} to={`/events/${event.id}`} key={event.id}>
-                <Image src={`/assets/event-detail-page.jpg`} />
+                <Image
+                  as="img"
+                  alt="camping site"
+                  src={`/assets/event-detail-page.jpg`}
+                />
                 <Card.Content>
                   <Card.Header textAlign="center">{event.title}</Card.Header>
                   <Card.Meta textAlign="center" style={{ marginTop: 10 }}>

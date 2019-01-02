@@ -10,7 +10,11 @@ const PlaceCard = ({ id, photoURL, title, city }) => {
         height={700}
         placeholder={<Image src="/assets/placeholder-image.png" />}
       >
-        <Image src={photoURL || `/assets/placeholder-image.png`} />
+        <Image
+          as="img"
+          alt="placeholder image"
+          src={photoURL || `/assets/placeholder-image.png`}
+        />
       </LazyLoad>
 
       <Card.Content>
