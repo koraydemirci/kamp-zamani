@@ -127,7 +127,7 @@ class App extends Component {
                       />
                       <Route
                         path="/createEventfromPlace/:id"
-                        component={AsyncEventFormFromPlace}
+                        component={UserIsAuthenticated(AsyncEventFormFromPlace)}
                       />
                       <Route
                         path="/manageEvent/:id"

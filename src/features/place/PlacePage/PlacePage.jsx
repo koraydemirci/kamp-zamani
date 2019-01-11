@@ -103,13 +103,22 @@ class SitePage extends Component {
         </Grid.Column>
         <Grid.Column width={4}>
           <Segment>
-            <Button
-              as={Link}
-              to={`/createEventFromPlace/${place.id}`}
-              positive
-              fluid
-              content="Burada Kamp Düzenle"
-            />
+            {authenticated ? (
+              <Button
+                as={Link}
+                to={`/createEventFromPlace/${place.id}`}
+                positive
+                fluid
+                content="Burada Kamp Düzenle"
+              />
+            ) : (
+              <Button
+                onClick={() => openModal('UnauthModal')}
+                positive
+                fluid
+                content="Burada Kamp Düzenle"
+              />
+            )}
           </Segment>
         </Grid.Column>
       </Grid>
